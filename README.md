@@ -4,7 +4,7 @@ A luxury-tier, highly interactive portfolio website for Chinmay Mahananda, engin
 
 Designed specifically to showcase core competencies in **Electrical & Computer Engineering, VLSI Design, Systolic Array hardware accelerators, and Machine Learning Systems** for target roles at **Google TPU / Silicon teams**.
 
-Live URL: [https://chinmayabhinav.org](https://chinmayabhinav.org) (Mapped via GitHub Pages)
+Live URL: [https://chinmaymahananda.github.io](https://chinmaymahananda.github.io)
 
 ---
 
@@ -44,19 +44,3 @@ npx http-server -p 8080
 ```
 
 Open your browser and navigate to `http://localhost:8080` to view the site.
-
----
-
-## 🚀 How to Deploy on GitHub Pages
-
-1. Create a new public repository on GitHub named `chinmaymahananda.github.io` (replace `chinmaymahananda` with your exact GitHub username if different).
-2. Open your terminal in this directory and execute the following commands to link and push your code:
-   ```bash
-   # Add your remote origin repository
-   git remote add origin https://github.com/chinmaymahananda/chinmaymahananda.github.io.git
-   
-   # Set the primary branch to main and push
-   git branch -M main
-   git push -u origin main
-   ```
-3. GitHub Pages will automatically deploy your portfolio! If you own the custom domain `chinmayabhinav.org`, ensure your DNS registers a CNAME pointing to `chinmaymahananda.github.io`.
