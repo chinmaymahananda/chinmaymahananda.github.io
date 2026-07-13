@@ -711,7 +711,7 @@ function runGoogleAlignmentDiagnostics() {
     
     const lines = [
         "Initializing Google TPU/Silicon alignment diagnostics v2.1...",
-        "Connecting to workspace database (chinmayabhinav.org)... OK",
+        "Connecting to workspace database (chinmaymahananda.github.io)... OK",
         "<span class='text-accent'>[10:02:44] Compiling Verilog modules: systolic_mac.v... OK</span>",
         "<span class='text-accent'>[10:02:45] Synthesized node: PE_INT8 [ signed multiplier, stationary accumulator ]</span>",
         "<span class='text-accent'>[10:02:46] Simulating self-checking testbench: 20/20 random matrices... OK [PASSED]</span>",
