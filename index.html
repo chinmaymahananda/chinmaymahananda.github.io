@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chinmay Mahananda - Portfolio Website. M.S. in Electrical & Computer Engineering at Northeastern University. Specialize in VLSI Design, Systolic Array ML Accelerators, Embedded Systems, and AI. Target hire for Google Silicon/ML teams.">
+    <meta name="author" content="Chinmay Mahananda">
+    <title>Chinmay Mahananda | Silicon &amp; ML Systems Engineer</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+</head>
+<body>
+    <!-- Custom Glowing Cursor -->
+    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+
+    <!-- Background Canvas for Silicon Particle Trace -->
+    <canvas id="siliconCanvas"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-accent">⚡</span> CHINMAY MAHANANDA
+            </a>
+            <nav class="nav-menu">
+                <a href="#about" class="nav-link">About</a>
+                <a href="#achievements" class="nav-link">Achievements</a>
+                <a href="#skills" class="nav-link">Systolic Skills</a>
+                <a href="#projects" class="nav-link">Silicon Projects</a>
+                <a href="#terminal" class="nav-link">CLI Verification</a>
+                <a href="#experience" class="nav-link">Experience</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="#contact" class="btn btn-primary btn-glow">Contact</a>
+            </div>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="hero-bg-gradients">
+                <div class="glow-sphere glow-blue"></div>
+                <div class="glow-sphere glow-purple"></div>
+                <div class="glow-sphere glow-gold"></div>
+            </div>
+            
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <div class="badge-container">
+                        <span class="pulse-dot"></span>
+                        <span class="badge-text">Target: Google Silicon / TPU / ML Systems Teams</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Chinmay Mahananda <br>
+                        <span class="gradient-text">Silicon &amp; AI Hardware</span>
+                    </h1>
+                    <div class="vanity-domain-wrapper">
+                        <a href="https://chinmayabhinav.org" target="_blank" class="vanity-link">chinmayabhinav.org</a>
+                    </div>
+                    <p class="hero-subtitle">
+                        M.S. in Electrical &amp; Computer Engineering student at Northeastern University. Specialize in VLSI design, systolic MAC accelerators, custom ALU implementation, and embedding ML models on hardware. 
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-glow" id="btnHeroRunDiagnostics">Run Alignment Check</button>
+                        <a href="#projects" class="btn btn-secondary">Explore Work</a>
+                    </div>
+                </div>
+                
+                <div class="hero-animation-container">
+                    <!-- Subtle background rotating torus -->
+                    <div class="torus-visual-wrapper hero-torus-bg">
+                        <div class="torus-glow-aura"></div>
+                        <div class="floating-chip">
+                            <div class="chip-inner">
+                                <div class="chip-pin pin-t"></div>
+                                <div class="chip-pin pin-r"></div>
+                                <div class="chip-pin pin-b"></div>
+                                <div class="chip-pin pin-l"></div>
+                                <div class="chip-core">
+                                    <span class="chip-core-text">INT8</span>
+                                    <span class="chip-core-sub">MAC</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="torus-ring ring-1"></div>
+                        <div class="torus-ring ring-2"></div>
+                        <div class="torus-ring ring-3"></div>
+                    </div>
+                    
+                    <!-- Terminal Container in Hero Right Column -->
+                    <div class="terminal-container glass-panel hero-terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-buttons">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                            <div class="terminal-title">guest@chinmayabhinav.org: ~ (Antigravity TUI v2.0)</div>
+                        </div>
+                        
+                        <div class="terminal-body" id="terminalBody">
+                            <div class="terminal-output">
+                                <p class="terminal-welcome">Google Antigravity TUI [Version 2.0.26]</p>
+                                <p class="terminal-welcome">Connecting to workspace: C:\\Users\\Chinmay Mahananda\\portfolio-verification</p>
+                                <p class="terminal-welcome">Type <span class="text-accent">help</span> to list commands or check the qualifications below.</p>
+                                <br>
+                            </div>
+                            <div class="terminal-input-line">
+                                <span class="terminal-prompt">guest@mahananda:~$</span>
+                                <input type="text" class="terminal-input" id="terminalInput" autofocus>
+                            </div>
+                        </div>
+                        
+                        <div class="terminal-shortcuts">
+                            <button class="btn btn-terminal" data-cmd="check-skills">Check Skills</button>
+                            <button class="btn btn-terminal" data-cmd="check-projects">Verify Projects</button>
+                            <button class="btn btn-terminal btn-primary btn-glow" data-cmd="run-google-alignment">Run Google Alignment</button>
+                            <button class="btn btn-terminal" data-cmd="cat resume.md">cat resume.md</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span class="scroll-dot"></span>
+            </div>
+        </section>
+
+        <!-- About & Stats Summary -->
+        <section class="about-section" id="about">
+            <div class="container">
+                <div class="section-header center">
+                    <span class="section-tag">Profile Summary</span>
+                    <h2 class="section-title">Hardware-Software Co-Design Specialist</h2>
+                </div>
+                
+                <div class="about-grid">
+                    <div class="about-card glass-panel text-glow-hover">
+                        <div class="about-icon">🎓</div>
+                        <h3>Education</h3>
+                        <p class="about-card-text">
+                            <strong>Northeastern University, Boston/Seattle</strong><br>
+                            M.S. in Electrical &amp; Computer Engineering (GPA 3.85/4.0)<br>
+                            <span class="meta-info">Sep 2025 – May 2027</span>
+                        </p>
+                        <p class="about-card-subtext">
+                            Focusing on VLSI Design, Hardware-Software Co-Design for Machine Intelligence, and Advanced Computer Vision.
+                        </p>
+                    </div>
+
+                    <div class="about-card glass-panel text-glow-hover">
+                        <div class="about-icon">🔬</div>
+                        <h3>Research &amp; Foundations</h3>
+                        <p class="about-card-text">
+                            <strong>Dr. Ambedkar Institute of Technology</strong><br>
+                            B.E. in Electronics &amp; Communication Engineering<br>
+                            <span class="meta-info">Aug 2020 – May 2024</span>
+                        </p>
+                        <p class="about-card-subtext">
+                            Published author in 6G THz Band Microstrip Patch Antennas (KSCST funded project). Solid grounding in electromagnetic wave theory and signal processing.
+                        </p>
+                    </div>
+
+                    <div class="about-card glass-panel text-glow-hover">
+                        <div class="about-icon">🏛️</div>
+                        <h3>Academic Standing</h3>
+                        <p class="about-card-text">
+                            <strong>Key Metrics</strong><br>
+                            • ECE Graduate GPA: 3.85 / 4.0<br>
+                            • 2x National Math Talent Hunt Winner<br>
+                            • Best Student &amp; Best Attitude awards
+                        </p>
+                        <p class="about-card-subtext">
+                            Strong mathematics foundation, coupled with analytical rigor that drives deep-dive waveform debugging and microarchitectural optimization.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Achievements Gallery -->
+        <section class="achievements-section" id="achievements">
+            <div class="section-bg-blur"></div>
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Recognitions &amp; Milestones</span>
+                    <h2 class="section-title">Luxurious Achievements</h2>
+                </div>
+                
+                <div class="achievements-carousel">
+                    <!-- Slide 1: Math Talent -->
+                    <div class="achievement-card glass-panel" data-tilt>
+                        <div class="achievement-header">
+                            <span class="achievement-year">Academic Honoree</span>
+                            <div class="achievement-badge gold">👑</div>
+                        </div>
+                        <h3 class="achievement-title">2x National Math Talent Hunt Winner</h3>
+                        <p class="achievement-desc">
+                            Achieved consecutive victories in the prestigious national-level Math Talent Hunt Examination during Carmel Pre-University study, showcasing elite mathematical analysis and numerical mastery.
+                        </p>
+                        <div class="achievement-footer">
+                            <span class="achievement-tag">Carmel PU College</span>
+                            <span class="achievement-tag">National Champion</span>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Best Attitude -->
+                    <div class="achievement-card glass-panel" data-tilt>
+                        <div class="achievement-header">
+                            <span class="achievement-year">Leadership Award</span>
+                            <div class="achievement-badge blue">🌟</div>
+                        </div>
+                        <h3 class="achievement-title">College "Best Attitude" &amp; "Best Student"</h3>
+                        <p class="achievement-desc">
+                            Received the Carmel Pre-University "Best Attitude" award in 2019-2020, following the prestigious "Best Student" award in 2018-2019. Also achieved top marks in Physics, Electronics, and English.
+                        </p>
+                        <div class="achievement-footer">
+                            <span class="achievement-tag">Best Student</span>
+                            <span class="achievement-tag">Subject Topper</span>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Government Projects -->
+                    <div class="achievement-card glass-panel" data-tilt>
+                        <div class="achievement-header">
+                            <span class="achievement-year">Incubator Pitch</span>
+                            <div class="achievement-badge purple">⚙️</div>
+                        </div>
+                        <h3 class="achievement-title">MSME Central Government Projects</h3>
+                        <p class="achievement-desc">
+                            Contributed to more than three projects submitted by college and evaluated at the Indian Central Government level under the MSME Incubation program. Participated in the national Tomato Grand Challenge Hackathon (2023).
+                        </p>
+                        <div class="achievement-footer">
+                            <span class="achievement-tag">MSME Incubator</span>
+                            <span class="achievement-tag">Hackathon Finalist</span>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: Publication -->
+                    <div class="achievement-card glass-panel" data-tilt>
+                        <div class="achievement-header">
+                            <span class="achievement-year">Antenna Research</span>
+                            <div class="achievement-badge teal">📡</div>
+                        </div>
+                        <h3 class="achievement-title">6G THz Band Antenna Publication</h3>
+                        <p class="achievement-desc">
+                            Published "Design of a 6G THz Band Microstrip Patch Antenna" in IJNRD (2024). Securely funded by the Karnataka State Council for Science and Technology (KSCST). Brings deep RF design expertise to high-frequency silicon constraints.
+                        </p>
+                        <div class="achievement-footer">
+                            <span class="achievement-tag">IJNRD 2024</span>
+                            <span class="achievement-tag">KSCST Funded</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Silicon Systolic Array Skill Visualizer -->
+        <section class="skills-section" id="skills">
+            <div class="container">
+                <div class="section-header center">
+                    <span class="section-tag">Interactive Hardware</span>
+                    <h2 class="section-title">Silicon Systolic Array Skill Matrix</h2>
+                    <p class="section-subtitle">
+                        Hover over the Processing Elements (PEs) below. See data flow paths propagate vertically and horizontally, demonstrating my technical competencies through a simulated systolic array multiplier structure.
+                    </p>
+                </div>
+
+                <div class="systolic-matrix-container">
+                    <!-- Column/Row Labels for Systolic Array -->
+                    <div class="array-bus-label label-col-0">Data X_in [0]</div>
+                    <div class="array-bus-label label-col-1">Data X_in [1]</div>
+                    <div class="array-bus-label label-col-2">Data X_in [2]</div>
+                    <div class="array-bus-label label-col-3">Data X_in [3]</div>
+                    <div class="array-bus-label label-row-0">Weight Y_in [0]</div>
+                    <div class="array-bus-label label-row-1">Weight Y_in [1]</div>
+                    <div class="array-bus-label label-row-2">Weight Y_in [2]</div>
+                    <div class="array-bus-label label-row-3">Weight Y_in [3]</div>
+
+                    <!-- Grid of PEs -->
+                    <div class="systolic-grid" id="systolicGrid">
+                        <!-- Row 0 -->
+                        <div class="pe-node glass-panel" data-row="0" data-col="0" data-skill="verilog">
+                            <div class="pe-type">PE [0,0]</div>
+                            <div class="pe-name">Verilog</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="0" data-col="1" data-skill="python">
+                            <div class="pe-type">PE [0,1]</div>
+                            <div class="pe-name">Python</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="0" data-col="2" data-skill="c">
+                            <div class="pe-type">PE [0,2]</div>
+                            <div class="pe-name">Embedded C</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="0" data-col="3" data-skill="matlab">
+                            <div class="pe-type">PE [0,3]</div>
+                            <div class="pe-name">MATLAB</div>
+                        </div>
+
+                        <!-- Row 1 -->
+                        <div class="pe-node glass-panel" data-row="1" data-col="0" data-skill="virtuoso">
+                            <div class="pe-type">PE [1,0]</div>
+                            <div class="pe-name">Virtuoso</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="1" data-col="1" data-skill="spectre">
+                            <div class="pe-type">PE [1,1]</div>
+                            <div class="pe-name">Spectre</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="1" data-col="2" data-skill="ltspice">
+                            <div class="pe-type">PE [1,2]</div>
+                            <div class="pe-name">LTspice</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="1" data-col="3" data-skill="cst">
+                            <div class="pe-type">PE [1,3]</div>
+                            <div class="pe-name">CST Studio</div>
+                        </div>
+
+                        <!-- Row 2 -->
+                        <div class="pe-node glass-panel" data-row="2" data-col="0" data-skill="kicad">
+                            <div class="pe-type">PE [2,0]</div>
+                            <div class="pe-name">KiCad</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="2" data-col="1" data-skill="altium">
+                            <div class="pe-type">PE [2,1]</div>
+                            <div class="pe-name">Altium</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="2" data-col="2" data-skill="pytorch">
+                            <div class="pe-type">PE [2,2]</div>
+                            <div class="pe-name">PyTorch</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="2" data-col="3" data-skill="scikit">
+                            <div class="pe-type">PE [2,3]</div>
+                            <div class="pe-name">Scikit-Learn</div>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="pe-node glass-panel" data-row="3" data-col="0" data-skill="xgboost">
+                            <div class="pe-type">PE [3,0]</div>
+                            <div class="pe-name">XGBoost</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="3" data-col="1" data-skill="git">
+                            <div class="pe-type">PE [3,1]</div>
+                            <div class="pe-name">Git</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="3" data-col="2" data-skill="verilogtools">
+                            <div class="pe-type">PE [3,2]</div>
+                            <div class="pe-name">Icarus VL</div>
+                        </div>
+                        <div class="pe-node glass-panel" data-row="3" data-col="3" data-skill="logisim">
+                            <div class="pe-type">PE [3,3]</div>
+                            <div class="pe-name">Logisim</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skill Details Card Display -->
+                <div class="skill-detail-panel glass-panel" id="skillDetailPanel">
+                    <div class="detail-placeholder">
+                        <span class="pulse-dot"></span> Hover over a processing element (PE) in the systolic array to fetch its execution parameters, latency, and engineering application.
+                    </div>
+                    <div class="detail-content hidden" id="skillDetailContent">
+                        <h3 id="skillTitle">Verilog HDL</h3>
+                        <div class="skill-meta-tags">
+                            <span class="skill-level" id="skillLevel">Expert</span>
+                            <span class="skill-latency" id="skillLatency">Clock Cycles: 1</span>
+                        </div>
+                        <p class="skill-desc" id="skillDesc">
+                            Used extensively to build structural and behavioral representations of custom computing components.
+                        </p>
+                        <div class="skill-projects-linked">
+                            <strong>Key Application:</strong> <span id="skillApplication">Systolic INT8 MAC Accelerator architecture, 20/20 testbench validation.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Silicon Projects with Interactive Simulators -->
+        <section class="projects-section" id="projects">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Interactive Hardware Simulations</span>
+                    <h2 class="section-title">Silicon &amp; Hardware Projects</h2>
+                </div>
+
+                <div class="projects-list">
+                    <!-- Project 1: INT8 Systolic Array CNN Accelerator -->
+                    <div class="project-item glass-panel">
+                        <div class="project-info">
+                            <div class="project-header">
+                                <span class="project-category">Silicon Architecture / Verilog</span>
+                                <a href="https://github.com/chinmaymahananda/systolic-mac-array" target="_blank" class="project-github-link">GitHub ↗</a>
+                            </div>
+                            <h3 class="project-title">FPGA-Based INT8 CNN Accelerator</h3>
+                            <p class="project-description">
+                                Designed a parameterizable output-stationary systolic MAC (Multiply-Accumulate) array in Verilog, built bottom-up from individual Processing Elements. Features signed arithmetic, generate-based scale-out, and custom Conv1 and Conv2 controllers.
+                            </p>
+                            
+                            <!-- Detailed Highlights -->
+                            <ul class="project-highlights">
+                                <li><strong>Hardware Debugging Power:</strong> Isolated and resolved a silent numerical drift issue on non-square input tiles. Traced and verified the defect to accumulator saturation logic via waveform-level debugging rather than assuming a testbench bug.</li>
+                                <li>Verified logic using an autonomous, self-checking testbench, achieving 20/20 randomized matrix-multiply success under Icarus Verilog simulation.</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="project-simulator glass-panel-inner">
+                            <div class="sim-header">
+                                <span class="sim-badge">Systolic Accumulator Simulation</span>
+                                <button class="btn btn-tiny" id="btnRunSystolicSim">Step MAC</button>
+                            </div>
+                            <div class="systolic-sim-body">
+                                <div class="systolic-matrix-sim">
+                                    <div class="sim-grid-row">
+                                        <div class="sim-pe" id="simPe00">0</div>
+                                        <div class="sim-pe" id="simPe01">0</div>
+                                    </div>
+                                    <div class="sim-grid-row">
+                                        <div class="sim-pe" id="simPe10">0</div>
+                                        <div class="sim-pe" id="simPe11">0</div>
+                                    </div>
+                                </div>
+                                <div class="systolic-inputs-display">
+                                    <div>Inputs X: <span class="sim-value" id="simInputX">[3, 2, -1, 4]</span></div>
+                                    <div>Weights Y: <span class="sim-value" id="simInputY">[-2, 5, 1, 3]</span></div>
+                                    <div>Accumulated State: <span class="sim-value" id="simAccumState">0</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 2: 8-Bit ALU & 4:1 Multiplexer CMOS Design -->
+                    <div class="project-item glass-panel">
+                        <div class="project-info">
+                            <div class="project-header">
+                                <span class="project-category">Digital Logic / CMOS Design</span>
+                                <span class="project-badge">Logisim &amp; Cadence Virtuoso</span>
+                            </div>
+                            <h3 class="project-title">8-Bit ALU &amp; Hierarchical 4:1 MUX</h3>
+                            <p class="project-description">
+                                Designed an 8-bit ALU in Logisim from a single 1-bit cell upward, implementing parallel AND/OR/XOR/NOR logic, full adder-based add/subtract via two's complement, and set-less-than (SLT) with MUX-based selector routing.
+                            </p>
+                            <ul class="project-highlights">
+                                <li>Constructed and transient-verified a hierarchical 4:1 multiplexer (cascaded 2:1 MUXes) in Cadence Virtuoso &amp; Spectre.</li>
+                                <li>Characterized propagation delay and confirmed correct switching behavior across all select states.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Interactive ALU Simulator -->
+                        <div class="project-simulator glass-panel-inner">
+                            <div class="sim-header">
+                                <span class="sim-badge">Interactive 8-Bit ALU Logic Console</span>
+                            </div>
+                            <div class="alu-sim-body">
+                                <div class="alu-controls">
+                                    <div class="alu-input-group">
+                                        <label for="aluInputA">Input A (8-bit Binary):</label>
+                                        <input type="text" id="aluInputA" value="00001101" maxlength="8">
+                                    </div>
+                                    <div class="alu-input-group">
+                                        <label for="aluInputB">Input B (8-bit Binary):</label>
+                                        <input type="text" id="aluInputB" value="00000111" maxlength="8">
+                                    </div>
+                                    <div class="alu-input-group">
+                                        <label for="aluOpSelect">Operation Select:</label>
+                                        <select id="aluOpSelect">
+                                            <option value="ADD">ADD (A + B)</option>
+                                            <option value="SUB">SUB (A - B)</option>
+                                            <option value="AND">AND (A &amp; B)</option>
+                                            <option value="OR">OR (A | B)</option>
+                                            <option value="XOR">XOR (A ^ B)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="alu-outputs">
+                                    <div class="output-item">
+                                        <span class="output-label">Result:</span>
+                                        <span class="output-value" id="aluResult">00010100</span>
+                                    </div>
+                                    <div class="output-flags">
+                                        <span>Zero: <strong id="flagZero">0</strong></span>
+                                        <span>Carry: <strong id="flagCarry">0</strong></span>
+                                        <span>Negative: <strong id="flagNegative">0</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 3: PCB Fabrication & Hardware Bring Up -->
+                    <div class="project-item glass-panel">
+                        <div class="project-info">
+                            <div class="project-header">
+                                <span class="project-category">Hardware Bring-Up / KiCad</span>
+                                <span class="project-badge">Schematic &amp; Layout</span>
+                            </div>
+                            <h3 class="project-title">PCB Fabrication &amp; Hardware Bring-Up</h3>
+                            <p class="project-description">
+                                Owned the end-to-end design cycle of a custom hardware board across schematic capture, layout routing, fabrication management, assembly, and functional bring-up.
+                            </p>
+                            <ul class="project-highlights">
+                                <li><strong>Fault Isolation:</strong> Isolated a failed signal net to an improperly routed ground return loop. Used systematic continuity and probe-based oscilloscope testing rather than thermal reflow guesswork.</li>
+                                <li>Documented corrective design updates for layout revisions, achieving immediate power-on stability.</li>
+                            </ul>
+                        </div>
+
+                        <!-- PCB Troubleshooting Steps slider -->
+                        <div class="project-simulator glass-panel-inner">
+                            <div class="sim-header">
+                                <span class="sim-badge">Hardware Bring-up Pipeline</span>
+                            </div>
+                            <div class="pcb-sim-body">
+                                <div class="pcb-steps">
+                                    <div class="pcb-step active" id="pcbStep1" data-step="1">
+                                        <div class="step-num">1</div>
+                                        <div class="step-name">Schematic</div>
+                                    </div>
+                                    <div class="pcb-step" id="pcbStep2" data-step="2">
+                                        <div class="step-num">2</div>
+                                        <div class="step-name">Layout Routing</div>
+                                    </div>
+                                    <div class="pcb-step" id="pcbStep3" data-step="3">
+                                        <div class="step-num">3</div>
+                                        <div class="step-name">Bring-Up Tests</div>
+                                    </div>
+                                    <div class="pcb-step" id="pcbStep4" data-step="4">
+                                        <div class="step-num">4</div>
+                                        <div class="step-name">Scope Isolation</div>
+                                    </div>
+                                </div>
+                                <div class="pcb-step-description" id="pcbStepDesc">
+                                    Capture logical components, specify power/ground domains, and isolate critical high-frequency signal tracks in KiCad schema.
+                                </div>
+                                <div class="pcb-slider-controls">
+                                    <button class="btn btn-tiny" id="btnPrevPcbStep" disabled>&larr; Back</button>
+                                    <button class="btn btn-tiny" id="btnNextPcbStep">Next Step &rarr;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project 4: Pokemon TCG Card Recognition -->
+                    <div class="project-item glass-panel">
+                        <div class="project-info">
+                            <div class="project-header">
+                                <span class="project-category">Machine Learning / PyTorch</span>
+                                <span class="project-badge">YOLO11 OBB, EfficientNet</span>
+                            </div>
+                            <h3 class="project-title">Pokémon TCG Card Recognition System</h3>
+                            <p class="project-description">
+                                Developed a YOLO11 Nano Oriented Bounding Box (OBB) card detector integrated with an EfficientNet-B0 triplet loss embedding pipeline. Performs sub-2 second card identification over 558 unique cards.
+                            </p>
+                            <ul class="project-highlights">
+                                <li>Scaled performance to 15,000+ classes without retraining the primary detector network.</li>
+                                <li>Trained on a single RTX 3050, incorporating extensive augmentation parameters to bridge the simulation-to-reality domain gap.</li>
+                            </ul>
+                        </div>
+
+                        <div class="project-simulator glass-panel-inner">
+                            <div class="sim-header">
+                                <span class="sim-badge">YOLO11 OBB Object Detection Simulation</span>
+                            </div>
+                            <div class="pokemon-sim-body">
+                                <div class="pokemon-camera-sim" id="pokemonCameraSim">
+                                    <div class="detection-overlay hidden" id="detectionOverlay">
+                                        <div class="bounding-box">
+                                            <span class="box-label">Charizard [99.2%]</span>
+                                        </div>
+                                    </div>
+                                    <span class="camera-text">Hover or click to scan Pokémon card</span>
+                                </div>
+                                <div class="pokemon-status">
+                                    Status: <span id="pokemonScanStatus" class="sim-value-idle">Awaiting Target Card...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Experience & Education History -->
+        <section class="experience-section" id="experience">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Career Timeline</span>
+                    <h2 class="section-title">Experience &amp; Work History</h2>
+                </div>
+
+                <div class="timeline">
+                    <!-- Item 1 -->
+                    <div class="timeline-item glass-panel">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <span class="timeline-date">2025</span>
+                                <h3 class="timeline-title">STEM Content Developer</h3>
+                                <span class="timeline-company">AppsNDevices (Smart Class Solutions) | Remote</span>
+                            </div>
+                            <p class="timeline-desc">
+                                Built interactive, simulation-driven STEM educational modules deployed to over 10,000+ students across government school programs in Assam and Uttarakhand, India.
+                            </p>
+                            <p class="timeline-impact">
+                                Translated complex circuit analysis and physics mechanics into hands-on digital canvas simulations, significantly lifting measured engagement metrics across regional cohorts.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="timeline-item glass-panel">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <span class="timeline-date">2024</span>
+                                <h3 class="timeline-title">Physics Faculty (IIT JEE &amp; NEET Prep)</h3>
+                                <span class="timeline-company">Sri Chaitanya Techno School | Bengaluru, India</span>
+                            </div>
+                            <p class="timeline-desc">
+                                Delivered highly structured exam prep physics lectures and managed laboratory/simulation sessions, breaking electromagnetism, optics, and circuit fundamentals into first-principles explanations.
+                            </p>
+                            <p class="timeline-impact">
+                                Earned the **Best Teacher Award (2024)** for outstanding, measurable student performance gains. Leveraged diagnostic teaching styles that translate directly to debugging complex VLSI and physical systems today.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer / Contact Information -->
+    <footer class="footer" id="contact">
+        <div class="container footer-container">
+            <div class="footer-left">
+                <h2 class="footer-title">Let's build the next generation of Silicon.</h2>
+                <p class="footer-subtitle">Currently seeking internship and full-time opportunities in hardware acceleration, ASIC/FPGA digital design, and VLSI engineering.</p>
+                <div class="contact-details">
+                    <a href="mailto:mahananda.c@northeastern.edu" class="contact-link">
+                        <span class="icon">✉</span> mahananda.c@northeastern.edu
+                    </a>
+                    <a href="tel:+12067417788" class="contact-link">
+                        <span class="icon">📞</span> +1 (206) 741-7788
+                    </a>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/in/chinmaymahananda" target="_blank" class="social-icon">LinkedIn</a>
+                        <a href="https://github.com/chinmaymahananda" target="_blank" class="social-icon">GitHub</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-form glass-panel">
+                    <h3>Direct Transmission</h3>
+                    <form id="contactForm" onsubmit="event.preventDefault(); alert('Message sent! Connection initialized.');">
+                        <div class="form-group">
+                            <input type="text" placeholder="Name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Message" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-glow w-100">Send Wave</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Chinmay Mahananda. Inspired by Google Antigravity. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>
