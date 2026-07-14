@@ -131,11 +131,12 @@ a {
     position: fixed;
     top: 0;
     left: 0;
-    transform: translate(-50%, -50%);
+    transform: translate3d(var(--cursor-x, -400px), var(--cursor-y, -400px), 0) translate(-50%, -50%);
     pointer-events: none;
     z-index: 1;
     border-radius: 50%;
-    transition: width 0.3s ease, height 0.3s ease;
+    will-change: transform;
+    transition: width 0.3s ease, height 0.3s ease, transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .cursor-dot {
@@ -145,16 +146,17 @@ a {
     position: fixed;
     top: 0;
     left: 0;
-    transform: translate(-50%, -50%);
+    transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) translate(-50%, -50%);
     pointer-events: none;
     z-index: 9999;
     border-radius: 50%;
+    will-change: transform;
     transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
     box-shadow: 0 0 12px var(--color-accent-blue);
 }
 
 .cursor-hovering {
-    transform: translate(-50%, -50%) scale(2.8);
+    transform: translate3d(var(--cursor-x, -100px), var(--cursor-y, -100px), 0) translate(-50%, -50%) scale(2.8);
     background-color: transparent;
     border: 1px solid var(--color-accent-blue);
     box-shadow: 0 0 20px rgba(0, 102, 204, 0.2);
@@ -947,25 +949,29 @@ section {
     color: var(--color-text-primary);
 }
 
-/* Dynamic wave animation line properties */
+/* Dynamic wave animation line properties -- expands outward from the
+   hovered PE via transform (GPU-composited), not left/top (layout-thrashing) */
 .wave-x-line, .wave-y-line {
     position: absolute;
-    background: linear-gradient(90deg, transparent, var(--color-accent-teal), transparent);
     pointer-events: none;
     z-index: 2;
+    will-change: transform, opacity;
 }
 
 .wave-x-line {
+    left: 0;
     height: 2px;
     width: 100%;
-    animation: propagateX 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    background: linear-gradient(90deg, transparent, var(--color-accent-teal), transparent);
+    animation: propagateX 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
 .wave-y-line {
+    top: 0;
     width: 2px;
     height: 100%;
     background: linear-gradient(180deg, transparent, var(--color-accent-teal), transparent);
-    animation: propagateY 0.7s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+    animation: propagateY 0.55s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 }
 
 /* Bus labels */
@@ -1983,13 +1989,15 @@ section {
 }
 
 @keyframes propagateX {
-    0% { left: -100%; opacity: 0.8; }
-    100% { left: 100%; opacity: 0; }
+    0% { transform: scaleX(0); opacity: 0.9; }
+    55% { opacity: 0.6; }
+    100% { transform: scaleX(1); opacity: 0; }
 }
 
 @keyframes propagateY {
-    0% { top: -100%; opacity: 0.8; }
-    100% { top: 100%; opacity: 0; }
+    0% { transform: scaleY(0); opacity: 0.9; }
+    55% { opacity: 0.6; }
+    100% { transform: scaleY(1); opacity: 0; }
 }
 
 @keyframes scanLine {

@@ -5,15 +5,15 @@ const cursorGlow = document.getElementById('cursorGlow');
 const cursorDot = document.getElementById('cursorDot');
 
 document.addEventListener('mousemove', (e) => {
-    // Smooth trailing for the large glowing circle
-    cursorGlow.animate({
-        left: `${e.clientX}px`,
-        top: `${e.clientY}px`
-    }, { duration: 500, fill: 'forwards' });
-
-    // Sharp tracking for center dot
-    cursorDot.style.left = `${e.clientX}px`;
-    cursorDot.style.top = `${e.clientY}px`;
+    // Position both cursor elements via CSS custom properties + transform,
+    // not left/top -- keeps this on the compositor instead of forcing
+    // layout on every mousemove (this fires far more often than any hover).
+    const x = `${e.clientX}px`;
+    const y = `${e.clientY}px`;
+    cursorGlow.style.setProperty('--cursor-x', x);
+    cursorGlow.style.setProperty('--cursor-y', y);
+    cursorDot.style.setProperty('--cursor-x', x);
+    cursorDot.style.setProperty('--cursor-y', y);
 });
 
 // Cursor expansion on interactive elements
@@ -307,23 +307,35 @@ peNodes.forEach(node => {
 });
 
 function createSystolicWave(node, row, col) {
+    // Clear any wave still in flight so rapid re-hovering can't stack
+    // overlapping animations (was making the effect look messier/less smooth).
+    systolicGrid.querySelectorAll('.wave-x-line, .wave-y-line').forEach(el => el.remove());
+
     const rect = node.getBoundingClientRect();
     const gridRect = systolicGrid.getBoundingClientRect();
 
+    const centerX = rect.left - gridRect.left + rect.width / 2;
+    const centerY = rect.top - gridRect.top + rect.height / 2;
+
+    // transform-origin is set to the hovered PE's exact position, so the
+    // line grows outward from that PE in both directions at once --
+    // reads as the PE actually driving the bus, not a generic full-row wipe.
     const waveX = document.createElement('div');
     waveX.className = 'wave-x-line';
-    waveX.style.top = `${rect.top - gridRect.top + rect.height / 2}px`;
+    waveX.style.top = `${centerY}px`;
+    waveX.style.transformOrigin = `${(centerX / gridRect.width) * 100}% center`;
     systolicGrid.appendChild(waveX);
 
     const waveY = document.createElement('div');
     waveY.className = 'wave-y-line';
-    waveY.style.left = `${rect.left - gridRect.left + rect.width / 2}px`;
+    waveY.style.left = `${centerX}px`;
+    waveY.style.transformOrigin = `center ${(centerY / gridRect.height) * 100}%`;
     systolicGrid.appendChild(waveY);
 
     setTimeout(() => {
         waveX.remove();
         waveY.remove();
-    }, 700);
+    }, 550);
 }
 
 function highlightSystolicBuses(row, col) {
