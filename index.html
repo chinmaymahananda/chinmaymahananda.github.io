@@ -64,7 +64,7 @@
                 <div class="hero-content">
                     <div class="badge-container">
                         <span class="pulse-dot"></span>
-                        <span class="badge-text">Target: Google Silicon / TPU / ML Systems Teams</span>
+                        <span class="badge-text">Target: Silicon, VLSI &amp; Hardware Engineering Teams</span>
                     </div>
                     <h1 class="hero-title">
                         Chinmay Mahananda <br>
@@ -155,7 +155,7 @@
                         <h3>Education</h3>
                         <p class="about-card-text">
                             <strong>Northeastern University, Boston/Seattle</strong><br>
-                            M.S. in Electrical &amp; Computer Engineering (GPA 3.85/4.0)<br>
+                            M.S. in Electrical &amp; Computer Engineering (GPA 3.92/4.0)<br>
                             <span class="meta-info">Sep 2025 – May 2027</span>
                         </p>
                         <p class="about-card-subtext">
@@ -181,7 +181,7 @@
                         <h3>Academic Standing</h3>
                         <p class="about-card-text">
                             <strong>Key Metrics</strong><br>
-                            • ECE Graduate GPA: 3.85 / 4.0<br>
+                            • ECE Graduate GPA: 3.92 / 4.0<br>
                             • 2x National Math Talent Hunt Winner<br>
                             • Best Student &amp; Best Attitude awards
                         </p>
@@ -399,6 +399,53 @@
                 </div>
 
                 <div class="projects-list">
+                    <!-- Project 0: RISC-V Pipelined Core - Full Open-Source ASIC Flow -->
+                    <div class="project-item glass-panel">
+                        <div class="project-info">
+                            <div class="project-header">
+                                <span class="project-category">RTL-to-GDSII / ASIC Flow</span>
+                                <a href="https://github.com/chinmaymahananda/riscv-pipelined-core" target="_blank" class="project-github-link">GitHub ↗</a>
+                            </div>
+                            <h3 class="project-title">4-Stage Pipelined RV32I Core — Signed-Off to GDSII at 333MHz</h3>
+                            <p class="project-description">
+                                Designed a 4-stage pipelined RV32I core (IF→EX→MEM→WB) with hazard forwarding, load-use stalling, and branch handling, then carried it through a complete open-source ASIC flow — Yosys synthesis, OpenROAD place-and-route, Sky130 PDK — to a signed-off, manufacturable layout. Most student RTL projects stop at simulation; this one closes the loop between &quot;the RTL is correct&quot; and &quot;the RTL becomes a chip.&quot;
+                            </p>
+
+                            <ul class="project-highlights">
+                                <li><strong>Real optimization story, not just one number:</strong> baseline closed clean at 100MHz, then pushed to a 333MHz optimized target. A stretch attempt at 500MHz was tried and honestly documented as a failed timing closure — a real data point on where this design's timing wall sits, not a number quietly discarded.</li>
+                                <li>Verified bit-exact against a from-scratch RV32I golden model before synthesis; every hazard path (ALU forwarding, load-use stall, taken/not-taken branch, JAL) exercised in a self-checking testbench.</li>
+                            </ul>
+                        </div>
+
+                        <div class="project-simulator glass-panel-inner">
+                            <div class="sim-header">
+                                <span class="sim-badge">Signoff Results — OpenLane / Sky130</span>
+                            </div>
+                            <div class="signoff-metrics-grid">
+                                <div class="signoff-metric">
+                                    <span class="signoff-metric-label">Clock frequency</span>
+                                    <span class="sim-value">333 MHz</span>
+                                </div>
+                                <div class="signoff-metric">
+                                    <span class="signoff-metric-label">Timing (WNS / TNS)</span>
+                                    <span class="sim-value">0.0 / 0.0 ns</span>
+                                </div>
+                                <div class="signoff-metric">
+                                    <span class="signoff-metric-label">DRC / LVS violations</span>
+                                    <span class="sim-value">0 / 0</span>
+                                </div>
+                                <div class="signoff-metric">
+                                    <span class="signoff-metric-label">Core area</span>
+                                    <span class="sim-value">613,701 &micro;m&sup2;</span>
+                                </div>
+                            </div>
+                            <div class="systolic-inputs-display">
+                                <div>Flow: <span class="sim-value">Yosys → OpenROAD → Sky130</span></div>
+                                <div>Signoff: <span class="sim-value">Magic DRC · netgen LVS · OpenROAD STA</span></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Project 1: INT8 Systolic Array CNN Accelerator -->
                     <div class="project-item glass-panel">
                         <div class="project-info">

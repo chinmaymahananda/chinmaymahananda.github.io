@@ -1242,6 +1242,29 @@ section {
     font-weight: 600;
 }
 
+.signoff-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 16px;
+    margin-bottom: 14px;
+}
+
+.signoff-metric {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px 10px;
+    background: rgba(0, 102, 204, 0.03);
+    border: 1px solid rgba(0, 102, 204, 0.06);
+    border-radius: 6px;
+}
+
+.signoff-metric-label {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    font-weight: 500;
+}
+
 /* 2. ALU Logic Simulator */
 .alu-sim-body {
     display: flex;
