@@ -915,6 +915,7 @@ section {
     text-align: center;
     cursor: pointer;
     min-height: 105px;
+    min-width: 0;
     position: relative;
     background: rgba(255, 255, 255, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -1964,13 +1965,28 @@ section {
         grid-template-columns: 1fr;
     }
     
+    .systolic-matrix-container {
+        padding: 30px 14px;
+    }
+
     .systolic-grid {
         grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
+        gap: 8px;
     }
-    
+
+    .pe-node {
+        padding: 12px 4px;
+        min-height: 84px;
+    }
+
     .pe-name {
-        font-size: 0.75rem;
+        font-size: 0.65rem;
+        line-height: 1.2;
+        overflow-wrap: break-word;
+    }
+
+    .pe-type {
+        font-size: 0.6rem;
     }
     
     .array-bus-label {
