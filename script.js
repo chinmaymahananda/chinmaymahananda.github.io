@@ -642,15 +642,14 @@ Milestones and Certifications:
 `,
     'cat resume.md': () => resumeMarkdown,
     'download-resume': () => {
-        // Mock download dialog
+        // Real download -- serves the actual resume PDF from this repo.
         const link = document.createElement('a');
-        link.href = '#';
-        link.onclick = (e) => {
-            e.preventDefault();
-            alert("Starting download for 'Chinmay_Mahananda_Resume.pdf'...");
-        };
-        setTimeout(() => link.click(), 100);
-        return `Initializing download: [Chinmay_Mahananda_Resume.pdf]`;
+        link.href = 'assets/Chinmay_Mahananda_Resume.pdf';
+        link.download = 'Chinmay_Mahananda_Resume.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return `Downloading: [Chinmay_Mahananda_Resume.pdf]`;
     },
     clear: () => {
         const outputs = terminalBody.querySelectorAll('.terminal-output');
