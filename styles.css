@@ -448,6 +448,14 @@ a {
     width: 100%;
 }
 
+.hero-container > * {
+    /* Grid items default to min-width: auto, which lets long unbreakable
+       content (long headline, wide terminal) force the column wider than
+       the track and overflow the viewport on narrow screens. This lets
+       them actually shrink to fit, so text wraps instead of spilling out. */
+    min-width: 0;
+}
+
 .badge-container {
     display: inline-flex;
     align-items: center;
@@ -478,18 +486,20 @@ a {
 }
 
 .hero-title {
-    font-size: 4rem;
+    font-size: clamp(2.1rem, 5vw + 1.2rem, 4rem);
     line-height: 1.1;
     margin-bottom: 24px;
     color: var(--color-text-primary);
     letter-spacing: -0.04em;
+    overflow-wrap: break-word;
 }
 
 .hero-subtitle {
-    font-size: 1.15rem;
+    font-size: clamp(0.95rem, 1.5vw + 0.7rem, 1.15rem);
     color: var(--color-text-secondary);
     margin-bottom: 40px;
     max-width: 620px;
+    overflow-wrap: break-word;
 }
 
 .hero-buttons {
@@ -1598,6 +1608,8 @@ section {
 
 .terminal-welcome {
     color: var(--color-text-muted);
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 .text-accent {
@@ -1928,9 +1940,6 @@ section {
         display: none;
     }
     
-    .hero-title {
-        font-size: 2.7rem;
-    }
     
     .hero-container {
         grid-template-columns: 1fr;

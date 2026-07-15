@@ -42,7 +42,10 @@ window.addEventListener('resize', () => {
 });
 
 const particles = [];
-const particleCount = 65;
+// Fewer particles on narrow/low-power (mostly mobile) viewports --
+// the O(n^2) pairwise connection check below gets expensive fast, and
+// phones are exactly where that cost is most visible (battery, heat, jank).
+const particleCount = window.innerWidth < 768 ? 28 : 65;
 const connectionDistance = 150;
 
 class Particle {
