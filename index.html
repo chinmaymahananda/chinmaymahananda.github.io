@@ -453,15 +453,15 @@
                                 <span class="project-category">Silicon Architecture / Verilog</span>
                                 <a href="https://github.com/chinmaymahananda/systolic-mac-array" target="_blank" class="project-github-link">GitHub ↗</a>
                             </div>
-                            <h3 class="project-title">FPGA-Based INT8 CNN Accelerator</h3>
+                            <h3 class="project-title">INT8 CNN Inference Accelerator (Systolic MAC Array)</h3>
                             <p class="project-description">
-                                Designed a parameterizable output-stationary systolic MAC (Multiply-Accumulate) array in Verilog, built bottom-up from individual Processing Elements. Features signed arithmetic, generate-based scale-out, and custom Conv1 and Conv2 controllers.
+                                Designed a parameterizable output-stationary systolic MAC (Multiply-Accumulate) array in Verilog, built bottom-up from individual Processing Elements, then extended it into a full INT8 CNN inference accelerator with Conv1, Conv2, and FC controllers chained together via interlayer requantization bridges.
                             </p>
                             
                             <!-- Detailed Highlights -->
                             <ul class="project-highlights">
+                                <li><strong>Result:</strong> all 20 end-to-end calibration samples pass bit-exact, from raw image through Conv1 &rarr; Conv2 &rarr; FC to final logits, matching FP32 baseline accuracy &mdash; not just a synthetic matrix-multiply test, the full chained pipeline.</li>
                                 <li><strong>Hardware Debugging Power:</strong> Isolated and resolved a silent numerical drift issue on non-square input tiles. Traced and verified the defect to accumulator saturation logic via waveform-level debugging rather than assuming a testbench bug.</li>
-                                <li>Verified logic using an autonomous, self-checking testbench, achieving 20/20 randomized matrix-multiply success under Icarus Verilog simulation.</li>
                             </ul>
                         </div>
                         
@@ -664,7 +664,7 @@
                                 Built interactive, simulation-driven STEM educational modules deployed to over 10,000+ students across government school programs in Assam and Uttarakhand, India.
                             </p>
                             <p class="timeline-impact">
-                                Translated complex circuit analysis and physics mechanics into hands-on digital canvas simulations, significantly lifting measured engagement metrics across regional cohorts.
+                                Translated complex circuit analysis and physics mechanics into hands-on digital canvas simulations.
                             </p>
                         </div>
                     </div>
