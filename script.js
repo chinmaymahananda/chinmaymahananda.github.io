@@ -607,7 +607,7 @@ Available commands:
   <span class="text-accent">achievements</span>        - Displays honors, awards, and publication metadata.
   <span class="text-accent">cat resume.md</span>       - Prints the full text of Chinmay's resume.
   <span class="text-accent">download-resume</span>     - Downloads a copy of the printable PDF resume.
-  <span class="text-accent">run-google-alignment</span> - Runs diagnostic metrics checking match for Google HW roles.
+  <span class="text-accent">run-hw-alignment</span> - Runs diagnostic metrics checking match for Silicon/Hardware roles.
   <span class="text-accent">clear</span>               - Clears the terminal screen.
 `,
     'check-skills': () => `
@@ -666,8 +666,8 @@ terminalInput.addEventListener('keydown', (e) => {
 
         writeOutputLine(`guest@mahananda:~$ ${val}`, 'terminal-command-echo');
 
-        if (val === 'run-google-alignment') {
-            runGoogleAlignmentDiagnostics();
+        if (val === 'run-hw-alignment') {
+            runHwAlignmentDiagnostics();
         } else if (commands[val]) {
             const outStr = commands[val]();
             if (outStr) writeOutputLine(outStr);
@@ -687,8 +687,8 @@ document.querySelectorAll('.btn-terminal').forEach(btn => {
         const cmd = btn.getAttribute('data-cmd');
         writeOutputLine(`guest@mahananda:~$ ${cmd}`, 'terminal-command-echo');
         
-        if (cmd === 'run-google-alignment') {
-            runGoogleAlignmentDiagnostics();
+        if (cmd === 'run-hw-alignment') {
+            runHwAlignmentDiagnostics();
         } else if (commands[cmd]) {
             const outStr = commands[cmd]();
             if (outStr) writeOutputLine(outStr);
@@ -704,8 +704,8 @@ if (btnHeroRunDiagnostics) {
     btnHeroRunDiagnostics.addEventListener('click', () => {
         // Scroll slightly to make sure hero terminal is visible
         document.getElementById('hero').scrollIntoView({ behavior: 'smooth' });
-        writeOutputLine(`guest@mahananda:~$ run-google-alignment`, 'terminal-command-echo');
-        runGoogleAlignmentDiagnostics();
+        writeOutputLine(`guest@mahananda:~$ run-hw-alignment`, 'terminal-command-echo');
+        runHwAlignmentDiagnostics();
     });
 }
 
@@ -718,13 +718,13 @@ function writeOutputLine(text, className = '') {
     terminalBody.querySelector('.terminal-output').appendChild(line);
 }
 
-// Google Alignment diagnostic animation with REAL Verilog checks (Fluid output)
-function runGoogleAlignmentDiagnostics() {
+// Hardware Alignment diagnostic animation with REAL Verilog checks (Fluid output)
+function runHwAlignmentDiagnostics() {
     terminalInput.disabled = true;
     const outputContainer = terminalBody.querySelector('.terminal-output');
     
     const lines = [
-        "Initializing Google TPU/Silicon alignment diagnostics v2.1...",
+        "Initializing Silicon/Hardware alignment diagnostics v2.1...",
         "Connecting to workspace database (chinmaymahananda.github.io)... OK",
         "<span class='text-accent'>[10:02:44] Compiling Verilog modules: systolic_mac.v... OK</span>",
         "<span class='text-accent'>[10:02:45] Synthesized node: PE_INT8 [ signed multiplier, stationary accumulator ]</span>",
@@ -736,7 +736,7 @@ function runGoogleAlignmentDiagnostics() {
         "Verifying electromagnetics research files... FOUND [KSCST Funded microstrip patch antenna]",
         "Checking mathematics certifications... OK [2x National Math Talent Hunt Winner]",
         "----------------------------------------------------------------",
-        "<span class=\"text-success\">DIAGNOSTIC STATUS: ALIGNMENT RATIO 98% [ Google Silicon Dev Pipeline ]</span>",
+        "<span class=\"text-success\">DIAGNOSTIC STATUS: ALIGNMENT RATIO 98% [ Silicon/Hardware Dev Pipeline ]</span>",
         "<span class=\"text-success\">RECOMMENDATION: Highly qualified candidate. Direct pipeline to ASIC / Hardware-Software Co-Design groups.</span>",
         "----------------------------------------------------------------"
     ];
