@@ -188,7 +188,7 @@ const skillData = {
         level: "Proficient / Bare-metal",
         latency: "Execution Latency: Minimal overhead",
         desc: "Embedded firmware implementation for microcontroller boards. Specialization in writing peripheral drivers, interrupt handling routines, low-level register maps, and RTOS threads.",
-        app: "Embedded Systems Specialization (Emertxe 2025 certified), micro-controller board routing."
+        app: "Emertxe Certified Embedded Professional (ECEP), 2025 - micro-controller bring-up and peripheral drivers."
     },
     matlab: {
         title: "MATLAB Simulation",
@@ -223,7 +223,7 @@ const skillData = {
         level: "Research-grade / Electromagnetics",
         latency: "Compute: 3D FEM solver",
         desc: "Performed full-wave 3D electromagnetic simulations to study patch antenna return losses, radiation parameters, and Farfield distributions.",
-        app: "6G THz Band Microstrip Patch Antenna research (KSCST funded)."
+        app: "6G THz-band microstrip patch antenna research, published as first author in IJNRD (2024)."
     },
     kicad: {
         title: "KiCad PCB Design Suite",
@@ -462,6 +462,7 @@ function runAluSimulation() {
     } else if (op === "SUB") {
         result = a - b;
         if (result < 0) {
+            carry = 1;                      // borrow occurred
             result = (result + 256) & 0xFF;
         }
     } else if (op === "AND") {
@@ -546,7 +547,7 @@ pokemonCameraSim.addEventListener('click', () => {
 
     setTimeout(() => {
         detectionOverlay.classList.remove('hidden');
-        pokemonScanStatus.textContent = "Target identified: [Charizard Card Embeds Match (Confidence: 99.2%)]";
+        pokemonScanStatus.textContent = "Target identified: [Charizard - simulated match, illustrative only]";
         pokemonScanStatus.className = "sim-value-active";
     }, 1200);
 });
@@ -562,14 +563,14 @@ const resumeMarkdown = `
 =========================================
       CHINMAY MAHANANDA - RESUME
 =========================================
-ECE M.S. student at Northeastern University. Specialize in VLSI, Custom Hardware Accelerators, and Embedded Systems.
+ECE M.S. student at Northeastern University. Focused on VLSI, custom hardware accelerators, and embedded systems.
 Email: mahananda.c@northeastern.edu | Phone: +1 (206) 741-7788
 
 [EDUCATION]
-- Northeastern University (Seattle/Boston, WA)
-  M.S. in Electrical & Computer Engineering | GPA: 3.85 / 4.0 | Sep 2025 - May 2027
+- Northeastern University (Seattle, WA)
+  M.S. in Electrical & Computer Engineering | GPA: 3.92 / 4.0 | Sep 2025 - May 2027
 - Dr. Ambedkar Institute of Technology (Bengaluru, India)
-  B.E. in Electronics & Communication Engineering | GPA: 8.5 / 10 | Aug 2020 - May 2024
+  B.E. in Electronics & Communication Engineering | Aug 2020 - May 2024
 
 [TECHNICAL SKILLS]
 - Languages: Verilog, Python, Embedded C, MATLAB, SPICE
@@ -577,23 +578,23 @@ Email: mahananda.c@northeastern.edu | Phone: +1 (206) 741-7788
 - Developer Tools: Git, Icarus Verilog, GTKWave, Logisim, Linux & Shell
 
 [EXPERIENCE]
-- STEM Content Developer | AppsNDevices (Smart Class Solutions) | 2025
+- Content Developer | Appsndevices Technologies Private Limited (Bengaluru, India) | May - Jul 2025
   Built simulation-driven STEM modules deployed to 10,000+ students.
-- Physics Faculty | Sri Chaitanya Techno School (Bengaluru, India) | 2024
+- Physics Teacher | Sri Chaitanya Techno School (Bengaluru, India) | Sep - Nov 2024
   Delivered IIT JEE & NEET physics lectures. Won Best Teacher Award (2024).
 
 [PROJECTS]
-- FPGA Based INT8 CNN Accelerator (Verilog, Icarus Verilog)
+- INT8 CNN Inference Accelerator (Verilog, Icarus Verilog)
   Output stationary systolic MAC array. TracedConv2 saturation overflow bug.
 - 8-Bit ALU & CMOS 4:1 Multiplexer (Logisim, Cadence Virtuoso, Spectre)
   Custom layout delay optimizations.
 - PCB Fabrication & Bring Up (KiCad)
   Brought up board, isolated ground return loop failures.
 - Pokémon TCG Recognition (PyTorch, YOLO11 OBB, EfficientNet-B0)
-  Triplets embed pipeline. Scale to 15,000+ classes.
+  Triplet embedding pipeline over 558 unique card embeddings.
 
 [PUBLICATIONS & AWARDS]
-- Publication: "Design of a 6G THz Band Microstrip Patch Antenna," IJNRD 2024 (KSCST funded).
+- Publication: "Design of 6G Antenna," IJNRD 2024, Vol. 9 Issue 6 (first author).
 - Awards: 2x National Math Talent Hunt Winner, College Best Attitude, Best Student.
 =========================================
 `;
@@ -621,7 +622,7 @@ Available commands:
 `,
     'check-projects': () => `
 Listing verified projects:
-1. <span class="text-accent">FPGA Based INT8 CNN Accelerator</span> [Verilog, Icarus Verilog]
+1. <span class="text-accent">INT8 CNN Inference Accelerator</span> [Verilog, Icarus Verilog]
    - Parameterizable Output Stationary MAC systolic array.
    - Traced accumulation overflow bug under GTKWave traces.
 2. <span class="text-accent">8-Bit ALU &amp; CMOS 4:1 Multiplexer</span> [Cadence Virtuoso, Spectre]
@@ -629,7 +630,7 @@ Listing verified projects:
 3. <span class="text-accent">PCB Hardware Bring-Up Design</span> [KiCad]
    - Managed routing tracks, fixed ground return loops, and debugged board power.
 4. <span class="text-accent">Pokémon TCG Card Recognition</span> [PyTorch, YOLO11 OBB]
-   - Sub-2 second card scanning, RTX 3050 training, scaling to 15,000+ nodes.
+   - Sub-2 second card scanning over 558 card embeddings, trained on a single RTX 3050.
 `,
     achievements: () => `
 Milestones and Certifications:
@@ -637,8 +638,8 @@ Milestones and Certifications:
 - **Academic Topper awards**: Highest physics, electronics, and English scores.
 - **Best Student (2018-19)** &amp; **Best Attitude (2019-20)**.
 - **Best Teacher Award (2024)**: Issued by Sri Chaitanya Techno School.
-- **KSCST Funded Publication**: "Design of 6G THz Band Microstrip Patch Antenna," IJNRD 2024.
-- **Embedded Systems Specialization**: Certified by Emertxe (2025).
+- **Publication (First Author)**: "Design of 6G Antenna," IJNRD 2024, Vol. 9 Issue 6.
+- **Emertxe Certified Embedded Professional (ECEP)**: Emertxe Information Technologies, 2025 (ID 24032F_023).
 `,
     'cat resume.md': () => resumeMarkdown,
     'download-resume': () => {
@@ -731,13 +732,13 @@ function runHwAlignmentDiagnostics() {
         "<span class='text-accent'>[10:02:46] Simulating self-checking testbench: 20/20 random matrices... OK [PASSED]</span>",
         "<span class='text-accent'>[10:02:46] Waveform analysis: Tracing Conv2 accumulator saturation limits... OK [0 faults]</span>",
         "<span class='text-accent'>[10:02:47] Instantiating 8-bit ALU: operations [ AND, OR, XOR, ADD, SUB, SLT ]... OK</span>",
-        "<span class='text-accent'>[10:02:48] Running Cadence Virtuoso Spectre delays: 4:1 hierarchical MUX... OK [45ps delay]</span>",
-        "Validating GPA qualifications (Northeastern ECE MS)... OK [3.85 / 4.0]",
-        "Verifying electromagnetics research files... FOUND [KSCST Funded microstrip patch antenna]",
+        "<span class='text-accent'>[10:02:48] Running Cadence Virtuoso Spectre delays: 4:1 hierarchical MUX... OK</span>",
+        "Validating GPA qualifications (Northeastern ECE MS)... OK [3.92 / 4.0]",
+        "Verifying electromagnetics research files... FOUND [IJNRD 2024 antenna publication, first author]",
         "Checking mathematics certifications... OK [2x National Math Talent Hunt Winner]",
         "----------------------------------------------------------------",
-        "<span class=\"text-success\">DIAGNOSTIC STATUS: ALIGNMENT RATIO 98% [ Silicon/Hardware Dev Pipeline ]</span>",
-        "<span class=\"text-success\">RECOMMENDATION: Highly qualified candidate. Direct pipeline to ASIC / Hardware-Software Co-Design groups.</span>",
+        "<span class=\"text-success\">DIAGNOSTIC SUMMARY: RTL design, verification, and RTL-to-GDSII signoff evidence located.</span>",
+        "<span class=\"text-success\">Full sources at github.com/chinmaymahananda - all repos are public and independently verifiable.</span>",
         "----------------------------------------------------------------"
     ];
 
