@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Chinmay Mahananda - Portfolio Website. M.S. in Electrical & Computer Engineering at Northeastern University. Specialize in VLSI Design, Systolic Array ML Accelerators, Embedded Systems, and AI. Seeking Summer 2027 internships in silicon, VLSI and hardware engineering.">
+    <meta name="description" content="Chinmay Mahananda - Portfolio Website. M.S. in Electrical & Computer Engineering at Northeastern University. Focused on VLSI design, systolic array ML accelerators, embedded systems, and AI. Seeking Summer 2027 internships in silicon, VLSI and hardware engineering.">
     <meta name="author" content="Chinmay Mahananda">
     <title>Chinmay Mahananda | Silicon &amp; ML Systems Engineer</title>
     
@@ -117,7 +117,7 @@
                         <div class="terminal-body" id="terminalBody">
                             <div class="terminal-output">
                                 <p class="terminal-welcome">Google Antigravity TUI [Version 2.0.26]</p>
-                                <p class="terminal-welcome">Connecting to workspace: C:\\Users\\Chinmay Mahananda\\portfolio-verification</p>
+                                <p class="terminal-welcome">Connecting to workspace: ~/portfolio-verification</p>
                                 <p class="terminal-welcome">Type <span class="text-accent">help</span> to list commands or check the qualifications below.</p>
                                 <br>
                             </div>
@@ -657,7 +657,7 @@
                                 <div class="pokemon-camera-sim" id="pokemonCameraSim">
                                     <div class="detection-overlay hidden" id="detectionOverlay">
                                         <div class="bounding-box">
-                                            <span class="box-label">Charizard [99.2%]</span>
+                                            <span class="box-label">Charizard [simulated]</span>
                                         </div>
                                     </div>
                                     <span class="camera-text">Hover or click to scan Pokémon card</span>
@@ -745,7 +745,7 @@
             <div class="footer-right">
                 <div class="footer-form glass-panel">
                     <h3>Direct Transmission</h3>
-                    <form id="contactForm" onsubmit="event.preventDefault(); alert('Message sent! Connection initialized.');">
+                    <form id="contactForm" onsubmit="event.preventDefault(); var f=this; var n=encodeURIComponent(f.elements[0].value); var e=encodeURIComponent(f.elements[1].value); var m=encodeURIComponent(f.elements[2].value); window.location.href='mailto:mahananda.c@northeastern.edu?subject=Portfolio enquiry from '+n+'&amp;body='+m+'%0D%0A%0D%0AReply to: '+e;">
                         <div class="form-group">
                             <input type="text" placeholder="Name" required>
                         </div>
