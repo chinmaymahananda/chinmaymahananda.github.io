@@ -156,7 +156,7 @@
                         <p class="about-card-text">
                             <strong>Northeastern University, Seattle</strong><br>
                             M.S. in Electrical &amp; Computer Engineering (GPA 3.92/4.0)<br>
-                            <span class="meta-info">Sep 2025 – May 2027</span>
+                            <span class="meta-info">Sep 2025 – Dec 2027</span>
                         </p>
                         <p class="about-card-subtext">
                             Concentration: Hardware &amp; Software for Machine Intelligence. Graduate coursework in VLSI Design, Computer Vision, Advanced Computer Vision, and Machine Learning &amp; Pattern Recognition.
@@ -431,6 +431,38 @@
                 </div>
 
                 <div class="projects-list">
+                    <!-- Project -1: mxgold - OCP MX Conformance Suite -->
+                    <div class="project-item glass-panel">
+                        <div class="project-info">
+                            <div class="project-header">
+                                <span class="project-category">Verification / Numerics</span>
+                                <a href="https://github.com/chinmaymahananda/mx-conformance" target="_blank" class="project-github-link">GitHub &#8599;</a>
+                            </div>
+                            <h3 class="project-title">mxgold &mdash; Bit-Exact Conformance Suite for OCP Microscaling (MX) Arithmetic</h3>
+                            <p class="project-description">
+                                OCP MX v1.0 &mdash; MXFP8, MXFP6, MXFP4, MXINT8 &mdash; was standardised in 2023 by AMD, Arm, Intel, Meta, Microsoft, NVIDIA and Qualcomm, and now sits in the datapath of essentially every AI accelerator being built. The spec permits conformant implementations to disagree bit-for-bit, and published conformance work stops at the representation layer: encode and decode of single elements. Hardware does not compute single elements &mdash; it computes dot products, over scaled blocks, in a finite accumulator, in a fixed order. mxgold is a zero-dependency Python golden reference for that operation layer.
+                            </p>
+                            <ul>
+                                <li><strong>Conformance coverage:</strong> v0.1 passes 43/43 checks across MXFP8, MXFP6, MXFP4, MXINT8 and NVFP4, running under CI on Python 3.10 through 3.13 with no dependencies beyond the standard library.</li>
+                                <li><strong>Novel finding (Gap C):</strong> the spec defines how a shared block scale is <em>applied</em>, never how an encoder <em>selects</em> one. On a 16-element block fully representable in E2M1, MAX_ALIGNED zeroes 1/16 elements at 0.0000 relative error while MAX_POW2 zeroes 6/16 at 0.1892. Both are conformant &mdash; the unspecified encoder-side choice costs more accuracy than the element format does, and no existing suite tests for it.</li>
+                                <li><strong>Verification discipline:</strong> encode() returns raw bit patterns rather than floats, so &minus;0.0 and distinct NaN payloads stay distinguishable &mdash; both have caught real silicon bugs. Every constant is tagged [SPEC], [SPEC-OPEN], [ARCH] or [UNVERIFIED], so an unconfirmed reading can never be mistaken for spec fact.</li>
+                            </ul>
+                        </div>
+                        <div class="project-simulator glass-panel-inner">
+                            <div class="sim-header">
+                                <span class="sim-badge">Gap C &mdash; Block Scale Selection</span>
+                            </div>
+                            <div class="systolic-sim-body">
+                                <p style="margin:0 0 12px 0;">16-element block, every value exactly representable in E2M1. Both strategies conform to OCP MX v1.0.</p>
+                                <table style="width:100%; border-collapse:collapse;">
+                                    <tr><th style="text-align:left; padding:6px 4px;">Scale selection</th><th style="text-align:right; padding:6px 4px;">Zeroed</th><th style="text-align:right; padding:6px 4px;">Rel. error</th></tr>
+                                    <tr><td style="padding:6px 4px;">MAX_ALIGNED</td><td style="text-align:right; padding:6px 4px;">1 / 16</td><td style="text-align:right; padding:6px 4px;"><strong>0.0000</strong></td></tr>
+                                    <tr><td style="padding:6px 4px;">MAX_POW2</td><td style="text-align:right; padding:6px 4px;">6 / 16</td><td style="text-align:right; padding:6px 4px;"><strong>0.1892</strong></td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Project 0: RISC-V Pipelined Core - Full Open-Source ASIC Flow -->
                     <div class="project-item glass-panel">
                         <div class="project-info">
@@ -487,13 +519,13 @@
                             </div>
                             <h3 class="project-title">INT8 CNN Inference Accelerator (Systolic MAC Array)</h3>
                             <p class="project-description">
-                                Designed a parameterizable output-stationary systolic MAC (Multiply-Accumulate) array in Verilog, built bottom-up from individual Processing Elements, then extended it into a full INT8 CNN inference accelerator with Conv1, Conv2, and FC controllers chained together via interlayer requantization bridges.
+                                Designed a parameterizable output-stationary systolic MAC (Multiply-Accumulate) array in Verilog, built bottom-up from individual Processing Elements, then extended it into a full weight-stationary INT8 CNN inference accelerator with Conv1, Conv2, and FC controllers chained together via interlayer requantization bridges.
                             </p>
                             
                             <!-- Detailed Highlights -->
                             <ul class="project-highlights">
                                 <li><strong>Result:</strong> all 20 end-to-end calibration samples pass bit-exact, from raw image through Conv1 &rarr; Conv2 &rarr; FC to final logits, matching FP32 baseline accuracy &mdash; not just a synthetic matrix-multiply test, the full chained pipeline.</li>
-                                <li><strong>Hardware Debugging Power:</strong> Isolated and resolved a silent numerical drift issue on non-square input tiles. Traced and verified the defect to accumulator saturation logic via waveform-level debugging rather than assuming a testbench bug.</li>
+                                <li><strong>Hardware Debugging Power:</strong> Caught a two-cycle control-latency bug during Conv1 bring-up by diffing waveforms against per-tap golden accumulator values. Registered ROM reads plus registered address outputs meant the MAC enable had to lag the tap index by two cycles, not one &mdash; a single delay stage left 124 of 144 outputs mismatched against the golden model.</li>
                             </ul>
                         </div>
                         
@@ -728,7 +760,7 @@
         <div class="container footer-container">
             <div class="footer-left">
                 <h2 class="footer-title">Let's build the next generation of Silicon.</h2>
-                <p class="footer-subtitle">Seeking Summer 2027 internships in hardware acceleration, ASIC/FPGA digital design, and VLSI engineering. Graduating May 2027 and open to new-grad roles from that date.</p>
+                <p class="footer-subtitle">Seeking Summer 2027 internships in hardware acceleration, ASIC/FPGA digital design, and VLSI engineering. Graduating December 2027 and open to new-grad roles from that date.</p>
                 <div class="contact-details">
                     <a href="mailto:mahananda.c@northeastern.edu" class="contact-link">
                         <span class="icon">✉</span> mahananda.c@northeastern.edu
