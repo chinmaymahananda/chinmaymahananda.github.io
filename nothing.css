@@ -276,3 +276,51 @@ html.rm .nt-grid.stack .nt-cell { position: static; }
   .rc__s em { font-size: 24px; }
   .nt-ring__stage { padding-top: 84px; }
 }
+
+/* v8 mobile: guided pans, vertical flows, full-width controls, compact waveform */
+.pan { position: relative; }
+.pan__bar { display: none; }
+html.m .pan__sticky { position: sticky; top: 72px; }
+html.m .pan .nt-scroll { overflow: hidden; }
+html.m .pan .dg { min-width: 0; max-width: none; display: block; }
+html.m .pan__bar { display: block; height: 3px; border-radius: 3px; background: #E3E6EB; margin-top: 16px; overflow: hidden; }
+html.m .pan__bar i { display: block; height: 100%; width: 0; background: var(--n-red); border-radius: 3px; }
+html.m .nt-proj { overflow: visible; }
+html.m .nt-pair { gap: 18px; }
+@media (max-width: 699px) {
+  .flow { flex-direction: column; overflow: visible; padding: 4px 0 0; }
+  .flow li { flex: none; padding: 0 0 22px 32px; }
+  .flow li::before { left: 5px; right: auto; top: 12px; bottom: -6px; width: 1px; height: auto; }
+  .flow li:last-child::before { display: none; }
+  .flow li::after { left: 0; top: 3px; }
+  .flow b { font-size: 15px; }
+  .nt .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; width: 100%; }
+  .nt .seg button { padding: 12px 6px; font-size: 13px; white-space: nowrap; text-align: center; }
+  .nt .wv { min-width: 0; width: 100%; }
+  .nt .wv text { font-size: 12px; }
+  #bug .nt-scroll { overflow: visible; }
+}
+
+/* v8 grid fix: a wide panning diagram must never widen its grid column (that widened the whole page) */
+.pan, .pan__sticky, .nt-pair > * { min-width: 0; }
+@media (max-width: 999px) { .nt-pair { grid-template-columns: minmax(0, 1fr); } }
+
+/* v9 transforms: progress lines grow with GPU transforms, not height/width (no layout per frame) */
+.trace__fill { height: 100% !important; transform-origin: 50% 0; transform: scaleY(0); will-change: transform; }
+.trace__pkt { top: 0 !important; will-change: transform, opacity; }
+html.m .pan__bar i { width: 100% !important; transform-origin: 0 50%; transform: scaleX(0); will-change: transform; }
+
+/* v10 rail: on phones the signal trace is a slim fixed rail on the left edge */
+html.m .trace { position: fixed; top: 88px !important; bottom: 26px; height: auto !important; left: 6px; z-index: 12; opacity: 0; transition: opacity .35s; background: #E3E6EB; }
+html.m .trace .via { width: 12px; height: 12px; margin: -6px 0 0 -6px; }
+html.m .trace__pkt { width: 10px; height: 10px; margin: -5px 0 0 -5px; }
+
+/* v11 caps: vh-based spacing is capped in px, so 'desktop site' mode on phones (very tall viewports) keeps tight spacing */
+.nt-work { padding-top: min(18vh, 170px); padding-bottom: min(6vh, 60px); }
+.nt-intro { margin-bottom: min(14vh, 130px); }
+.nt-proj { padding-top: min(12vh, 110px); padding-bottom: min(12vh, 110px); }
+.nt-record { padding-top: min(14vh, 130px); padding-bottom: min(14vh, 130px); }
+.nt-contact { padding-top: min(16vh, 150px); padding-bottom: min(12vh, 110px); }
+.nt-grid.stack { padding-bottom: min(12vh, 110px); }
+.nt-ring { height: min(420vh, 4300px); }
+@media (max-width: 700px) { .nt-ring { height: min(360vh, 3400px); } }

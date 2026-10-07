@@ -9,6 +9,13 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const mk = (n, a = {}, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
   const lite = matchMedia('(pointer: coarse)').matches || (navigator.hardwareConcurrency || 8) <= 4;
+  // background work queue: heavy one-off builds run one per idle slot instead of all at load
+  const quietBG = () => performance.now() - (window.__lastScroll || 0) > 250;
+  const idle = cb => window.requestIdleCallback
+    ? requestIdleCallback(d => (quietBG() || d.didTimeout) ? cb(d) : idle(cb), { timeout: 1500 })
+    : setTimeout(() => quietBG() ? cb({ timeRemaining: () => 10 }) : idle(cb), 40);
+  const bgq = []; let pumping = false;
+  const later = fn => { bgq.push(fn); if (!pumping) { pumping = true; idle(function run() { const f = bgq.shift(); if (f) f(); if (bgq.length) idle(run); else pumping = false; }); } };
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 
   // scroll progress of an element through the viewport
@@ -72,7 +79,7 @@
       ctx.globalAlpha = 1;
     }
     const ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-    ready.then(() => { build(); job(h, (p, t) => draw(clamp(p * 1.25), t)); });
+    ready.then(() => later(() => { build(); job(h, (p, t) => draw(clamp(p * 1.25), t)); }));
     let rt; addEventListener('resize', () => { if (innerWidth === builtW) return; clearTimeout(rt); rt = setTimeout(build, 150); });
   }
   $$('[data-dots]').forEach(dotHeading);
@@ -266,8 +273,56 @@
   };
   $$('[data-diagram]').forEach(fig => {
     const svg = fig.querySelector('svg.dg'), spec = SPECS[fig.dataset.diagram];
-    if (svg && spec) { const up = diagram(svg, spec); job(fig, (p, t) => up(clamp(p * 1.15), t)); }
+    if (svg && spec) {
+      let up = null; const make = () => { if (!up) up = diagram(svg, spec); };
+      later(make);   // built in idle time; built on the spot if you scroll there first
+      job(fig, (p, t, skipped) => { make(); up(skipped ? 1 : (fig._dp != null && isM() ? fig._dp : clamp(p * 1.15)), t); });
+    }
   });
+
+  /* ---------- 2b. phones: wide diagrams become a guided pan that follows the signal as you scroll ---------- */
+  const isM = () => innerWidth < 700;
+  const setM = () => document.documentElement.classList.toggle('m', isM() && !reduce);
+  setM();
+  const NAVH = 72, pans = [];
+  if (!reduce) $$('.nt-fig').forEach(fig => {
+    const svg = fig.querySelector('svg.dg'); if (!svg) return;
+    let box = svg.parentElement;
+    if (!box.classList.contains('nt-scroll')) { box = document.createElement('div'); box.className = 'nt-scroll'; svg.before(box); box.appendChild(svg); }
+    const pan = document.createElement('div'); pan.className = 'pan';
+    const st = document.createElement('div'); st.className = 'pan__sticky';
+    fig.before(pan); pan.appendChild(st); st.appendChild(fig);
+    const bar = document.createElement('div'); bar.className = 'pan__bar'; bar.setAttribute('aria-hidden', 'true'); bar.innerHTML = '<i></i>'; box.after(bar);
+    const vb = svg.viewBox.baseVal;
+    const o = { fig, pan, st, svg, box, fill: bar.firstChild, dist: 0, stH: 0, top: NAVH, lastP: -1, w: 0 };
+    o.layout = (force) => {
+      if (!force && innerWidth === o.w) return; o.w = innerWidth;   // mobile URL bars change height constantly: ignore those
+      if (!isM()) { svg.style.width = ''; svg.style.transform = ''; pan.style.height = ''; st.style.top = ''; o.dist = 0; fig._dp = null; return; }
+      // as large as the screen allows (bigger = more immersive), then centre the pinned card vertically
+      const S = Math.min(1.12, Math.max(.6, (innerHeight - NAVH - 170) / vb.height));
+      svg.style.width = Math.round(vb.width * S) + 'px';
+      o.dist = Math.max(0, Math.round(vb.width * S - box.clientWidth));
+      o.stH = st.offsetHeight;
+      o.top = Math.max(NAVH + 8, Math.round(NAVH + (innerHeight - NAVH - o.stH) / 2));
+      st.style.top = o.top + 'px';
+      pan.style.height = (o.stH + o.dist * 1.6) + 'px';
+      o.lastP = -1;
+    };
+    pans.push(o);
+    job(pan, (q, t, skipped, r) => {
+      if (!isM() || !o.dist) return;
+      const p = skipped || !r ? 1 : clamp((o.top - r.top) / Math.max(1, r.height - o.stH));
+      const approach = r ? clamp(1 - (r.top - o.top) / Math.max(1, VH - o.top)) : 1;
+      fig._dp = clamp(.14 * approach + p * .95);   // wires draw just ahead of the camera
+      const k = Math.round(p * 1000) / 1000; if (k === o.lastP) return; o.lastP = k;
+      svg.style.transform = `translateX(${(-k * o.dist).toFixed(1)}px)`;
+      o.fill.style.transform = `scaleX(${k.toFixed(3)})`;
+    });
+  });
+  const relayout = force => { setM(); pans.forEach(o => o.layout(force)); };
+  relayout(true); addEventListener('resize', () => relayout(false));
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => relayout(true));
+  addEventListener('orientationchange', () => setTimeout(() => relayout(true), 300));
 
   /* ---------- 3. flow chains: a red head walks the chain ---------- */
   $$('[data-flow]').forEach(ol => {
@@ -342,7 +397,7 @@
     let lastFade = -1;
     wipeFn = (t, ntTop) => {
       const band = Math.max(240, ch * .55), y0 = ntTop - band;
-      const fade = Math.round(clamp((ntTop - ch * .95) / (ch * .45)) * 100) / 100;
+      const fade = Math.round(clamp((y0 - ch * .5) / (ch * .3)) * 100) / 100; // text is gone before the dots reach it
       if (fade !== lastFade) { lastFade = fade; if (heroText) heroText.style.opacity = fade; if (heroLbl) heroLbl.style.opacity = fade; }
       if (ntTop < -4 || y0 - 40 > ch) { if (drawn) { cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height); drawn = false; } return; }
       drawn = true; cx.setTransform(cd, 0, 0, cd, 0, 0); cx.clearRect(0, 0, cw, ch);
@@ -379,7 +434,7 @@
   });
 
   /* ---------- 8. tilt-in: cards swing up from an angle and settle flat ---------- */
-  if (!reduce) $$('.nt-stats > div, .nt-fig, .nt-cards > li, .nt-gaps > div, .nt-demo').forEach(el => {
+  if (!reduce) $$('.nt-stats > div, .nt-fig, .nt-cards > li, .nt-gaps > div, .nt-demo').filter(el => !(isM() && el.querySelector('svg.dg'))).forEach(el => {
     el.classList.add('tilt');
     const idx = [...el.parentNode.children].indexOf(el) % 4;
     let lastE = -1;
@@ -454,35 +509,56 @@
     }
   }
 
-  /* ---------- 11. signal trace: one red packet rides a circuit trace through every project ---------- */
+  /* ---------- 11. signal trace: one red packet rides a circuit trace through every project ----------
+     desktop: the trace lives in the page margin. phones: it becomes a slim fixed rail that pauses while a diagram is
+     pinned (the diagram's own red bar shows that progress) and moves again once you scroll on. */
   const trace = document.getElementById('trace'), work = document.getElementById('work');
   if (trace && work && !reduce) {
     const fill = document.getElementById('traceFill'), pkt = document.getElementById('tracePkt');
     const projs = $$('.nt-proj', work);
-    let vias = [], tH = 0, lastF = -1, curF = 0, sig = '';
+    let vias = [], tH = 0, y0 = 0, lastF = -1, curF = 0, sig = '', spans = [], totalR = 0, railH = 1;
     const layout = () => {
-      const s2 = projs.map(p => p.offsetTop + ':' + p.offsetHeight).join(',');
-      if (s2 === sig) return; sig = s2;   // only rebuild when the layout really moved
-      // offsetTop ignores transforms, so the tilt-ins can't skew the trace
-      const y0 = projs[0].offsetTop, y1 = projs[projs.length - 1].offsetTop + projs[projs.length - 1].offsetHeight;
-      tH = y1 - y0; trace.style.top = y0 + 'px'; trace.style.height = tH + 'px';
+      const m = isM();
+      const s2 = (m ? 'm' : 'd') + projs.map(p => p.offsetTop + ':' + p.offsetHeight).join(',') + '|' + pans.map(o => o.pan.offsetHeight + ':' + o.stH).join(',') + '|' + innerHeight;
+      if (s2 === sig) return; sig = s2;
+      y0 = projs[0].offsetTop; const last = projs[projs.length - 1]; tH = last.offsetTop + last.offsetHeight - y0;
+      trace.style.top = m ? '' : y0 + 'px'; trace.style.height = m ? '' : tH + 'px';
+      spans = m ? pans.filter(o => o.dist).map(o => { const s = o.pan.offsetTop - y0, R = Math.max(0, o.pan.offsetHeight - o.stH); return { R, b: VH * .55 + s - o.top, end: s + o.stH }; }) : [];
+      totalR = spans.reduce((a, x) => a + x.R, 0);
+      railH = m ? Math.max(1, trace.clientHeight) : tH;
       vias.forEach(v => v.el.remove());
-      vias = projs.map(pr => { const el = document.createElement('i'); el.className = 'via'; const y = pr.offsetTop - y0 + 6; el.style.top = y + 'px'; trace.appendChild(el); const on = curF >= y; el.classList.toggle('on', on); return { el, y, on }; });
+      vias = projs.map(pr => {
+        const el = document.createElement('i'); el.className = 'via';
+        const y = pr.offsetTop - y0 + 6, yc = y - spans.filter(x => x.end <= y).reduce((a, x) => a + x.R, 0);
+        el.style.top = (m ? yc / Math.max(1, tH - totalR) * railH : y) + 'px';
+        const on = curF >= yc; el.classList.toggle('on', on); trace.appendChild(el); return { el, y: yc, on };
+      });
       lastF = -1;
     };
     layout(); addEventListener('resize', layout); setInterval(layout, 2500);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
     job(trace, (q, t, skipped, r) => {
-      const f = skipped ? tH : Math.round(clamp(VH * .55 - (r ? r.top : 0), 0, tH));
-      if (f === lastF) return; lastF = f; curF = f;
-      fill.style.height = f + 'px'; pkt.style.top = f + 'px'; pkt.style.opacity = f > 0 && f < tH ? 1 : 0;
-      vias.forEach(v => { const on = f >= v.y; if (on !== v.on) { v.on = on; v.el.classList.toggle('on', on); } });
+      const m = isM(), d = window.__sY == null ? 0 : scrollY - window.__sY;
+      const top = m ? work.getBoundingClientRect().top + y0 + d : (r ? r.top : 0);
+      const f = skipped ? tH : clamp(VH * .55 - top, 0, tH);
+      // scroll spent inside pinned diagrams. Soft knees centred on each pin edge: the packet glides into the pause and
+      // eases back out (continuous speed), and each pause still totals exactly R, so the rail never drifts
+      let pin = 0;
+      for (const x of spans) { const u = f - x.b, R = x.R, h = Math.min(55, R / 4);
+        pin += u <= -h ? 0 : u < h ? (u + h) * (u + h) / (4 * h) : u < R - h ? u : u < R + h ? R - (R + h - u) * (R + h - u) / (4 * h) : R; }
+      const c = f - pin, cp = clamp(c / Math.max(1, tH - totalR));
+      const key = Math.round(cp * 4000); if (key === lastF) return; lastF = key; curF = c;
+      fill.style.transform = `scaleY(${cp.toFixed(4)})`;
+      pkt.style.transform = `translate3d(0, ${(cp * railH).toFixed(1)}px, 0)`;
+      const vis = f > 0 && f < tH;
+      pkt.style.opacity = vis ? 1 : 0; if (m) trace.style.opacity = vis ? 1 : 0; else trace.style.opacity = '';
+      vias.forEach(v => { const on = c >= v.y; if (on !== v.on) { v.on = on; v.el.classList.toggle('on', on); } });
     });
   }
 
   /* ---------- 12. velocity lean: projects tilt with scroll speed and spring back ---------- */
   let leanFn = null;
-  if (!reduce) {
+  if (!reduce && !matchMedia('(pointer: coarse)').matches) {
     const leanEls = $$('.nt-proj'); leanEls.forEach(e => e.classList.add('lean'));
     let lastY = scrollY, vel = 0, lastSk = 0;
     leanFn = () => {
@@ -500,17 +576,20 @@
   let navDark = null;
   /* ---------- loop ---------- */
   function tick(ms) {
-    const t = ms / 1000;
+    const t = ms / 1000, P0 = window.__prof && performance.now();
     // read phase: every rect first, so writes below never force a second layout
-    const rs = jobs.map(j => j.el.getBoundingClientRect());
+    // shift every rect by the gap between real and eased scroll, so all scroll-driven animations glide together
+    const d = window.__sY == null ? 0 : scrollY - window.__sY;
+    const rs = jobs.map(j => { const r = j.el.getBoundingClientRect(); return d ? { top: r.top + d, bottom: r.bottom + d, height: r.height } : r; });
     // at the very bottom of the page, anything on screen counts as fully scrolled (tall screens can't scroll further)
     const atEnd = scrollY + VH >= document.documentElement.scrollHeight - 4;
-    const ntTop = nt ? nt.getBoundingClientRect().top : 1e9;
+    const ntTop = nt ? nt.getBoundingClientRect().top + d : 1e9;
     for (let i = 0; i < jobs.length; i++) {
       if (nearR(rs[i])) { jobs[i].fn(atEnd && rs[i].top < VH ? 1 : progR(rs[i]), t, false, rs[i]); jobs[i].past = false; }
       else if (rs[i].bottom < 0 && !jobs[i].past) { jobs[i].fn(1, t, true); jobs[i].past = true; }
     }
     if (wipeFn) wipeFn(t, ntTop);
+    if (window.__prof) window.__prof.nt.push(performance.now() - P0);
     if (leanFn) leanFn();
     if (nav) { const dk = ntTop < 80; if (dk !== navDark) { nav.classList.toggle('dark', dk); navDark = dk; } }
     requestAnimationFrame(tick);

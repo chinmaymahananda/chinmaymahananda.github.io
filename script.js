@@ -9,6 +9,7 @@
 (() => {
   const reduce = (() => { try { return localStorage.getItem('motion') === 'off'; } catch (e) { return false; } })(); // user switch overrides the OS setting
   if (reduce) document.documentElement.classList.add('rm'); // motion switched off by the visitor
+  const PROF = /[?&]prof/.test(location.search) ? (window.__prof = { hero: [], render: [], nt: [] }) : null; // timing only when ?prof is in the URL
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -52,31 +53,43 @@
     $('#tread').textContent = m.t;
   });
 
-  /* ---------- Conv1 enable-latency waveform ---------- */
+  /* ---------- Conv1 enable-latency waveform (desktop layout, plus a compact one for phones) ---------- */
   const wv = $('#wv'), NS = 'http://www.w3.org/2000/svg';
   const el = (n, a, p = wv) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); p.appendChild(e); return e; };
-  const X0 = 110, CW = 60, CY = 8;
-  const rowY = [28, 74, 120];
-  const g = el('g', { class: 'grid' });
-  for (let c = 0; c <= CY; c++) el('line', { x1: X0 + c * CW, x2: X0 + c * CW, y1: 10, y2: 140 }, g);
-  ['clk', 'rom_data', 'mac_en'].forEach((n, i) => { const t = el('text', { x: 0, y: rowY[i] + 4 }); t.textContent = n; });
-  let clk = `M${X0} ${rowY[0] + 10}`;
-  for (let c = 0; c < CY; c++) { const x = X0 + c * CW; clk += ` V${rowY[0] - 10} H${x + CW / 2} V${rowY[0] + 10} H${x + CW}`; }
-  el('path', { d: clk, class: 'tr clk' });
-  const dv = rowY[1], xv = X0 + 3 * CW, xe = X0 + 7 * CW;
-  el('path', { d: `M${X0} ${dv} H${xv - 6} L${xv} ${dv - 10} H${xe} L${xe + 6} ${dv} H${X0 + CY * CW} M${xv - 6} ${dv} L${xv} ${dv + 10} H${xe} L${xe + 6} ${dv}`, class: 'tr dv' });
-  const valid = el('text', { x: xv + 10, y: dv + 4 }); valid.textContent = 'valid';
-  const enG = el('g', {});
-  const en = el('path', { class: 'tr en' }, enG);
-  const mark = el('text', { y: rowY[2] - 16 }, enG);
-  const enPath = d => { const y = rowY[2], x1 = X0 + (1 + d) * CW, x2 = x1 + 4 * CW; return `M${X0} ${y + 10} H${x1} V${y - 10} H${x2} V${y + 10} H${X0 + CY * CW}`; };
+  let wvD = 1, wvCompact = null, renderWave = () => {};
+  function buildWave() {
+    const compact = innerWidth < 700; if (compact === wvCompact) return; wvCompact = compact;
+    // phones: labels sit above each trace and the window is 6 cycles, so the whole thing fits with no scrolling
+    const L = compact ? { X0: 4, CW: 52, CY: 6, rows: [40, 100, 160], W: 320, H: 180, pulse: 3 }
+                      : { X0: 110, CW: 60, CY: 8, rows: [28, 74, 120], W: 640, H: 150, pulse: 4 };
+    wv.innerHTML = ''; wv.setAttribute('viewBox', `0 0 ${L.W} ${L.H}`);
+    const ttl = el('title', { id: 'wvt' }); ttl.textContent = 'Waveform of clock, ROM data valid and MAC enable';
+    const { X0, CW, CY, rows } = L, end = X0 + CY * CW;
+    const g = el('g', { class: 'grid' });
+    for (let c = 0; c <= CY; c++) el('line', { x1: X0 + c * CW, x2: X0 + c * CW, y1: compact ? rows[0] - 12 : 10, y2: L.H - 10 }, g);
+    ['clk', 'rom_data', 'mac_en'].forEach((n, i) => { const t = compact ? el('text', { x: X0, y: rows[i] - 17 }) : el('text', { x: 0, y: rows[i] + 4 }); t.textContent = n; });
+    let clk = `M${X0} ${rows[0] + 10}`;
+    for (let c = 0; c < CY; c++) { const x = X0 + c * CW; clk += ` V${rows[0] - 10} H${x + CW / 2} V${rows[0] + 10} H${x + CW}`; }
+    el('path', { d: clk, class: 'tr clk' });
+    // tap index advances at cycle 1; registered address + registered ROM put valid data on the bus at cycle 3
+    const dv = rows[1], xv = X0 + 3 * CW, xe = compact ? end - 6 : X0 + 7 * CW;
+    el('path', { d: `M${X0} ${dv} H${xv - 6} L${xv} ${dv - 10} H${xe} L${xe + 6} ${dv} H${end} M${xv - 6} ${dv} L${xv} ${dv + 10} H${xe} L${xe + 6} ${dv}`, class: 'tr dv' });
+    const valid = el('text', { x: xv + 10, y: dv + 4 }); valid.textContent = 'valid';
+    const enG = el('g', {}), en = el('path', { class: 'tr en' }, enG), mark = el('text', { y: rows[2] - (compact ? 17 : 16) }, enG);
+    renderWave = d => {
+      const y = rows[2], x1 = X0 + (1 + d) * CW, x2 = Math.min(end, x1 + L.pulse * CW);
+      en.setAttribute('d', `M${X0} ${y + 10} H${x1} V${y - 10} H${x2} V${y + 10} H${end}`);
+      enG.classList.toggle('bad', d === 1);
+      mark.setAttribute('x', compact ? Math.max(X0 + 60, x1 + 6) : x1 + 6);
+      mark.textContent = d === 1 ? 'fires a cycle early' : 'aligned with valid data';
+      mark.style.fill = d === 1 ? 'var(--bad)' : 'var(--amber)';
+    };
+    renderWave(wvD);
+  }
+  buildWave(); addEventListener('resize', buildWave);
   seg($('#bug .seg'), b => {
-    const d = +b.dataset.d; en.setAttribute('d', enPath(d));
-    enG.classList.toggle('bad', d === 1);
-    mark.setAttribute('x', X0 + (1 + d) * CW + 6);
-    mark.textContent = d === 1 ? 'fires a cycle early' : 'aligned with valid data';
-    mark.style.fill = d === 1 ? 'var(--bad)' : 'var(--amber)';
-    $('#bread').textContent = d === 1 ? '124 of 144 outputs mismatched the golden model' : 'Enable aligned with valid data. The fix that brought Conv1 up.';
+    wvD = +b.dataset.d; renderWave(wvD);
+    $('#bread').textContent = wvD === 1 ? '124 of 144 outputs mismatched the golden model' : 'Enable aligned with valid data. The fix that brought Conv1 up.';
   });
 
   /* ---------- scroll position as a waveform ---------- */
@@ -88,17 +101,39 @@
     wave.innerHTML = `<defs><clipPath id="wc"><rect id="wcr" width="0" height="14"/></clipPath></defs><path d="${d}"/><path class="done" clip-path="url(#wc)" d="${d}"/>`;
   }
   drawWave(); addEventListener('resize', drawWave);
-  const docP = () => clamp(scrollY / Math.max(1, document.documentElement.scrollHeight - innerHeight));
+  const docP = () => clamp((window.__sY ?? scrollY) / Math.max(1, document.documentElement.scrollHeight - innerHeight));
 
   /* ---------- smooth scroll (optional) ---------- */
+  // scroll activity timestamp: background work waits for a pause so it never competes with your finger
+  window.__lastScroll = 0;
+  const markScroll = () => { window.__lastScroll = performance.now(); };
+  addEventListener('scroll', markScroll, { passive: true }); addEventListener('touchmove', markScroll, { passive: true });
+  const finePointer = matchMedia('(pointer: fine)').matches;
   let lenis = null;
-  if (!reduce && window.Lenis) {
+  if (!reduce && window.Lenis && finePointer) {   // smooth wheel for mouse/trackpad only; touch keeps native momentum
     lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
     $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
       const t = a.getAttribute('href'); if (t.length < 2) return;
       e.preventDefault(); lenis.scrollTo(t === '#top' ? 0 : t, { offset: -70 });
     }));
   }
+
+  if (!lenis) $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href'); if (id.length < 2) return; const el = document.querySelector(id); if (!el) return;
+    e.preventDefault(); scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: reduce ? 'auto' : 'smooth' });
+  }));
+
+  /* ---------- device tier: pick the best settings this hardware can hold, from the first frame ---------- */
+  const TIER = (() => {
+    let gpu = '';
+    try { const c = document.createElement('canvas'), g = c.getContext('webgl'), e = g && g.getExtension('WEBGL_debug_renderer_info'); gpu = e ? g.getParameter(e.UNMASKED_RENDERER_WEBGL) : ''; const lose = g && g.getExtension('WEBGL_lose_context'); if (lose) lose.loseContext(); } catch (e) {}
+    const apple = /Apple/i.test(gpu) || /iPhone|iPad|Macintosh/.test(navigator.userAgent);
+    const cores = navigator.hardwareConcurrency || 4, mem = navigator.deviceMemory || (apple ? 8 : 4);
+    const weak = /Mali-(T|G5\d|G7[0-2])|Adreno \(TM\) ([1-5]\d\d|6[0-1]\d)|PowerVR|SwiftShader|llvmpipe|Intel\(R\) HD/i.test(gpu);
+    const level = (weak || mem < 4 || cores < 4) ? 1 : (apple || cores >= 8) ? 3 : 2;
+    return { gpu, apple, level };
+  })();
+  window.__tier = TIER;
 
   /* ---------- hero ---------- */
   const hero = $('.hero'), canvas = $('#die'), labelsEl = $('#labels');
@@ -109,18 +144,30 @@
   try { if (window.THREE && hasGL) gl = initScene(); } catch (err) { console.warn('3D scene off:', err); gl = null; }
   if (!gl || reduce) document.documentElement.classList.add('no-gl');
 
-  const heroP = () => reduce ? 0.3 : clamp(scrollY / Math.max(1, hero.offsetHeight - innerHeight));
+  // touch devices scroll natively; scroll-driven animations follow a gently eased copy of the position (desktop already has Lenis)
+  let sY = scrollY, lastFrame = 0, heroRun = 1;
+  const TAU = 0;   // 1:1 with your finger: native touch scrolling is already smooth; easing here only adds lag
+  const measureHero = () => { heroRun = Math.max(1, hero.offsetHeight - innerHeight); };
+  measureHero(); addEventListener('resize', measureHero);
+  function stepScroll(time) {
+    const dt = lastFrame ? Math.min(64, time - lastFrame) : 16; lastFrame = time;
+    const y = scrollY, gap = y - sY;
+    if (!TAU || Math.abs(gap) > innerHeight * 2.5 || Math.abs(gap) < .3) sY = y;   // big jumps snap, tiny gaps settle
+    else sY += gap * (1 - Math.exp(-dt / TAU));
+    window.__sY = sY;
+  }
+  const heroP = () => reduce ? 0.3 : clamp(sY / heroRun);
 
   function setBeats(p) {
     if (reduce || !gl) { beats.forEach((b, i) => { b.style.opacity = i === 0 ? 1 : 0; }); return; }
     const o = [1 - smooth(.06, .12, p), smooth(.4, .46, p) * (1 - smooth(.58, .64, p)), smooth(.86, .93, p)];
-    beats.forEach((b, i) => { b.style.opacity = o[i]; b.style.transform = `translateY(${(1 - o[i]) * 24}px)`; b.setAttribute('aria-hidden', o[i] < .5); });
+    beats.forEach((b, i) => { const v = Math.round(o[i] * 200) / 200; if (b._o === v) return; b._o = v; b.style.opacity = v; b.style.transform = `translate3d(0, ${((1 - v) * 24).toFixed(1)}px, 0)`; b.setAttribute('aria-hidden', v < .5); });
     hint.style.opacity = 1 - smooth(.02, .06, p);
   }
 
   function initScene() {
     const T = THREE;
-    const renderer = new T.WebGLRenderer({ canvas, antialias: (devicePixelRatio || 1) < 1.5, alpha: true, powerPreference: 'high-performance' });
+    const renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setClearColor(0x000000, 0);
     const scene = new T.Scene();
     scene.fog = new T.Fog(0x0A0F1F, 150, 420);
@@ -147,9 +194,10 @@
 
     // seeded random so the chip looks identical on every visit
     let seed = 1337; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    const tex = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new T.CanvasTexture(c); t.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); return t; };
-    const big = Math.min(2048, renderer.capabilities.maxTextureSize), lowRes = innerWidth < 700;
-    const TW = lowRes ? 1024 : big;
+    // once a texture is on the GPU its canvas is freed (iOS Safari has a hard canvas-memory budget)
+    const freeAfterUpload = t => { t.onUpdate = () => { const im = t.image; setTimeout(() => { if (im && im.getContext) { im.width = 1; im.height = 1; } }, 0); t.onUpdate = null; }; return t; };
+    const tex = (w, h, draw) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new T.CanvasTexture(c); t.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); return freeAfterUpload(t); };
+    const TW = Math.min(renderer.capabilities.maxTextureSize, innerWidth < 700 ? (TIER.level >= 2 ? 1536 : 1024) : 2048); // sized to what the screen can show
 
     /* ===== DIE (floorplan) ===== */
     const DW = 46, DD = 32;
@@ -285,8 +333,38 @@
         }
       });
     }
+
+    // the same drawing as metalTex, split into small slices that fit between frames
+    function metalSlices(L) {
+      const c = document.createElement('canvas'); c.width = TW; c.height = TH; const g = c.getContext('2d');
+      const w = TW, h = TH, s = w / 2048, P = L.pitch * s * 2, Wd = Math.max(1, L.w * s * 2), steps = [];
+      g.fillStyle = L.col; g.strokeStyle = L.col;
+      if (L.power) steps.push(() => {
+        g.globalAlpha = .9; g.lineWidth = Wd * 1.4; g.strokeRect(Wd, Wd, w - Wd * 2, h - Wd * 2);
+        for (let x = P; x < w - P / 2; x += P) g.fillRect(x - Wd / 2, Wd, Wd, h - Wd * 2);
+        g.fillStyle = '#fff3d6'; g.globalAlpha = .55;
+        for (let x = P; x < w - P / 2; x += P) for (const y of [Wd * .6, h - Wd * 1.6]) for (let k = 0; k < 4; k++) g.fillRect(x - Wd / 2 + k * Wd / 4 + 2, y, Wd / 6, Wd / 6);
+      });
+      else {
+        const along = L.dir === 'h' ? w : h, across = L.dir === 'h' ? h : w, ts = [];
+        for (let t = P / 2; t < across; t += P) ts.push(t);
+        for (let i = 0; i < ts.length; i += 10) { const chunk = ts.slice(i, i + 10); steps.push(() => {
+          for (const t of chunk) { let a = rnd() * 40 * s;
+            while (a < along) {
+              const len = (L.stubs ? 10 + rnd() * 50 : 30 + rnd() * 260) * s * 2, gap = (6 + rnd() * (L.stubs ? 40 : 60)) * s * 2;
+              g.globalAlpha = .5 + rnd() * .4;
+              if (L.dir === 'h') g.fillRect(a, t - Wd / 2, len, Wd); else g.fillRect(t - Wd / 2, a, Wd, len);
+              g.globalAlpha = .95; const vs = Wd * 1.1;
+              if (rnd() < .6) { if (L.dir === 'h') g.fillRect(a, t - vs / 2, vs, vs); else g.fillRect(t - vs / 2, a, vs, vs); }
+              a += len + gap;
+            } } }); }
+      }
+      return { c, steps };
+    }
+    // tiny placeholder so every material compiles with its final shader up front; real textures arrive during idle time
+    const PH = new T.CanvasTexture(document.createElement('canvas'));
     const stack = LAYERS.map((L, k) => {
-      const m = fade(new T.MeshBasicMaterial({ map: metalTex(L), transparent: true, depthWrite: false, side: T.DoubleSide, blending: T.AdditiveBlending, opacity: 0 }));
+      const m = fade(new T.MeshBasicMaterial({ map: PH, transparent: true, depthWrite: false, side: T.DoubleSide, blending: T.AdditiveBlending, opacity: 0 }));
       const mesh = new T.Mesh(new T.PlaneGeometry(DW, DD), m); mesh.rotation.x = -Math.PI / 2;
       const frame = new T.LineSegments(new T.EdgesGeometry(new T.PlaneGeometry(DW, DD)), fade(lineMat(new T.Color(L.col).getHex(), 0)));
       frame.rotation.x = -Math.PI / 2;
@@ -395,6 +473,22 @@
     const bondMat = fade(lineMat(0xffcf6a, .95));
     const bonds = new T.LineSegments(bg2, bondMat); scene.add(bonds);
 
+    /* ===== background prep: build each metal texture and upload it to the GPU one idle slot at a time ===== */
+    // background prep, time-boxed inside the render loop: ~9 ms per frame when you're still, ~3.5 ms while scrolling,
+    // GPU uploads one at a time and spaced apart, so no single frame is ever blocked
+    const quietBG = () => performance.now() - window.__lastScroll > 250;
+    const heavy = fn => { fn.heavy = true; return fn; }, lights = [], heavies = [];
+    stack.forEach(S2 => { const b = metalSlices(S2.L); b.steps.forEach(st => lights.push(st));
+      heavies.push(heavy(() => { const tx = freeAfterUpload(new T.CanvasTexture(b.c)); tx.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); S2.m.map = tx; if (renderer.initTexture) renderer.initTexture(tx); })); });
+    const pending = lights.concat(heavies);
+    let heavyGap = 0;
+    const prepStep = () => {
+      const t0 = performance.now(), still = quietBG(), budget = still ? 9 : 3.5;
+      while (pending.length && !pending[0].heavy && performance.now() - t0 < budget) pending.shift()();
+      if (pending.length && pending[0].heavy && (still || ++heavyGap % 12 === 0)) pending.shift()();
+    };
+    const flushPrep = () => { while (pending.length) pending.shift()(); };
+
     /* ===== labels ===== */
     const labels = [];
     const addLabel = (t, cls, pos, vis) => { const e = document.createElement('span'); e.textContent = t; if (cls) e.className = cls; labelsEl.appendChild(e); labels.push({ e, pos, vis, v: new T.Vector3(), full: t, short: t.split(',')[0] }); };
@@ -409,23 +503,37 @@
     macros.filter(m => m.label).forEach(m => addLabel(m.label, '', () => [m.top.x, m.top.y, m.top.z], s => s.dive > .8 && s.close < .5));
 
     let W = 0, H = 0;
-    let maxPR = Math.min(devicePixelRatio || 1, innerWidth < 700 ? 1.5 : 2), lastW = 0, lastH = 0;
+    const phone = () => innerWidth < 700;
+    const DPR = devicePixelRatio || 1;
+    let maxPR = phone() ? Math.min(DPR, TIER.level === 3 ? 3 : TIER.level === 2 ? 2.5 : 2) : Math.min(DPR, TIER.level === 1 ? 1.5 : 2), lastW = 0, lastH = 0;
     function resize(force) {
       const nw = canvas.clientWidth, nh = canvas.clientHeight;
       if (!force && nw === lastW && Math.abs(nh - lastH) < 2) return; lastW = nw; lastH = nh;
       W = nw; H = nh;
       if (typeof labels !== 'undefined') labels.forEach(l => { l.e.textContent = W < 700 ? l.short : l.full; });
       renderer.setPixelRatio(maxPR);
-      renderer.setSize(W, H, false); cam.aspect = W / H; cam.updateProjectionMatrix();
+      renderer.setSize(W, H, false); cam.aspect = W / H; cam.fov = W / H < .9 ? 50 : 36; cam.updateProjectionMatrix();
     }
     resize(true); addEventListener('resize', () => resize(false));
     // adaptive quality: if frames run long on this device, step the render resolution down
-    let ftAcc = 0, ftN = 0, lastT = 0;
+    // measure this screen's frame interval (60/90/120 Hz), then trade resolution against it:
+    // step down only when frames run late, step back up (to native sharpness) when there's headroom
+    const capPR = phone() ? Math.min(DPR, TIER.level === 1 ? 2.25 : 3) : Math.min(DPR, 2);
+    const quiet = () => performance.now() - window.__lastScroll > 300;
+    let wantPR = 0;
+    let ftAcc = 0, ftN = 0, lastT = 0, warmN = 0, base = 0, upOK = 0, holdUntil = 0; const first = [];
     function perf(ms) {
-      if (lastT) { const dt = ms - lastT; if (dt < 200) { ftAcc += dt; ftN++; } }
-      lastT = ms;
-      if (ftN >= 45) { const avg = ftAcc / ftN; ftAcc = 0; ftN = 0; const floor = innerWidth < 700 ? .75 : 1;
-        if (avg > (innerWidth < 700 ? 19 : 22) && maxPR > floor) { maxPR = Math.max(floor, maxPR - .25); resize(true); } }
+      if (wantPR && quiet()) { maxPR = wantPR; wantPR = 0; resize(true); lastT = ms; return; }   // apply only while you're not scrolling
+      if (++warmN < 120) { lastT = ms; return; }
+      const dt = ms - lastT; lastT = ms;
+      if (!(dt > 0 && dt < 200)) return;
+      if (!base) { first.push(dt); if (first.length === 60) { first.sort((a, b) => a - b); base = Math.max(6.5, first[8]); } return; }
+      ftAcc += dt; ftN++;
+      if (ftN < 60) return;
+      const avg = ftAcc / ftN; ftAcc = 0; ftN = 0; const floor = phone() ? 1.5 : 1;
+      if (avg > base * 1.45 && maxPR > floor) { wantPR = Math.max(floor, maxPR - .25); holdUntil = ms + 10000; upOK = 0; }
+      else if (avg < base * 1.08 && maxPR < capPR && ms > holdUntil) { if (++upOK >= 3) { wantPR = Math.min(capPR, maxPR + .25); upOK = 0; } }
+      else upOK = 0;
     }
 
     let mx = 0, my = 0, tmx = 0, tmy = 0;
@@ -441,9 +549,20 @@
       [0.76, [-3, 30, 30], [0, 0, 0]],
       [1.00, [10.5, 8.5, 15.5], [-6, 0, 2.2]]
     ].map(([p, a, b]) => [p, new T.Vector3(...a), new T.Vector3(...b)]);
+    // portrait phones: framed for a tall screen (chip above the text, stack left of its callouts, array filling the width)
+    const KF_P = [
+      [0.00, [112, 104, 156], [0, -16, 6]],
+      [0.10, [100, 94, 140], [0, -14, 4]],
+      [0.34, [132, 48, 118], [14, 10, 0]],
+      [0.44, [122, 54, 102], [12, 10, 0]],
+      [0.60, [0, 104, 30], [0, 0, 1]],
+      [0.76, [-3, 76, 62], [0, 0, 2]],
+      [1.00, [6, 22, 22], [-1, 0, 1]]
+    ].map(([p, a, b]) => [p, new T.Vector3(...a), new T.Vector3(...b)]);
     const camAt = (p, pos, look) => {
-      let i = 0; while (i < KF.length - 2 && p > KF[i + 1][0]) i++;
-      const [p0, a0, b0] = KF[i], [p1, a1, b1] = KF[i + 1];
+      const K = W / H < .9 ? KF_P : KF;
+      let i = 0; while (i < K.length - 2 && p > K[i + 1][0]) i++;
+      const [p0, a0, b0] = K[i], [p1, a1, b1] = K[i + 1];
       const t = smooth(p0, p1, p);
       pos.lerpVectors(a0, a1, t); look.lerpVectors(b0, b1, t);
     };
@@ -456,6 +575,7 @@
       perf(time);
       const t = reduce ? 6.3 : time / 1000;
       mx += (tmx - mx) * .05; my += (tmy - my) * .05;
+      if (pending.length) { if (p > .07) flushPrep(); else prepStep(); }
       const ex = smooth(.1, .34, p);            // explode amount
       const dive = smooth(.46, .62, p);         // package and stack clear away
       const close = smooth(.8, 1, p);
@@ -492,28 +612,28 @@
         const k = S2.k;
         S2.g.position.y = lerp(.55 + k * .07, 6 + k * 5.6, smooth(.12 + k * .014, .25 + k * .012, p)) + dive * (8 + k * 6);
         const o = lerp(.1, 1, ex) * (1 - smooth(.46, .56, p));
-        S2.m.opacity = o * (S2.L.power ? .9 : .85); S2.f.opacity = o * .5; S2.g.visible = o > .01 && p > .1;
+        S2.m.opacity = o * (S2.L.power ? .9 : .85); S2.f.opacity = o * .5; S2.g.visible = o > .01;
       });
       dieEdge.material.opacity = lerp(.5, .9, ex);
-      dieG.visible = p > .085; // sealed under the lid until it lifts
 
       // routing draws in once the camera is over the die
       routes.forEach((r, k) => { const q = smooth(.58 + (k % 6) * .02, .76 + (k % 6) * .02, p); r.ln.visible = q > 0; r.ln.geometry.setDrawRange(0, Math.ceil(q * r.n)); r.ln.material.opacity = .25 + q * .7; });
 
       // camera
       camAt(p, pos, look);
-      if (W / H < .9) { const n = lerp(1.7, 1.5, dive); pos.sub(look).multiplyScalar(n).add(look); look.x *= .2; const sh = (W < 360 ? 15 : 11) * ex * (1 - dive); look.x += sh; pos.x += sh; }
       pos.x += mx * lerp(8, 3, dive); pos.y -= my * lerp(5, 2, dive);
       if (!reduce) pos.x += Math.sin(t * .12) * lerp(2.5, .5, dive);
       cam.position.copy(pos); cam.lookAt(look);
-      renderer.render(scene, cam);
+      const r0 = PROF && performance.now(); renderer.render(scene, cam); if (PROF) PROF.render.push(performance.now() - r0);
 
       // labels
       labels.forEach(l => {
         const [x, y, z] = l.pos(); l.v.set(x, y, z).project(cam);
         const on = l.vis(st) && l.v.z < 1 && Math.abs(l.v.x) < 1.05;
         if (l.on !== on) { l.e.classList.toggle('on', on); l.on = on; }
-        if (on) l.e.style.left = `${(l.v.x * .5 + .5) * W}px`; l.e.style.top = `${(-l.v.y * .5 + .5) * H}px`;
+        // GPU-only positioning (transform), and only when visible and actually moved
+        if (on) { const x = Math.round((l.v.x * .5 + .5) * W * 2) / 2, y = Math.round((-l.v.y * .5 + .5) * H * 2) / 2;
+          if (x !== l.x || y !== l.y) { l.x = x; l.y = y; l.e.style.transform = `translate3d(${x}px, ${y}px, 0) ${l.e.classList.contains('call') ? 'translate(14px, -50%)' : 'translate(-50%, -50%)'}`; } }
       });
     }
     return { frame };
@@ -527,9 +647,10 @@
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   function tick(time) {
     if (lenis) lenis.raf(time);
+    stepScroll(time);
     const p = heroP();
     setBeats(p);
-    if (gl && (visible || last < 0)) gl.frame(time, p);
+    if (gl && (visible || last < 0)) { const t0 = PROF && performance.now(); gl.frame(time, p); if (PROF) PROF.hero.push(performance.now() - t0); }
     last = p;
     const dp = docP(), r = $('#wcr');
     nav.classList.toggle('solid', scrollY > hero.offsetHeight - innerHeight - 40);

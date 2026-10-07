@@ -171,3 +171,9 @@ h1 { font: 700 clamp(56px, 11vw, 168px)/.86 var(--cond); letter-spacing: -.025em
 
 /* v7 */
 body { overflow-x: hidden; }
+
+/* v9: hero labels are positioned with transforms only (no per-frame layout) */
+.hero__labels span { left: 0; top: 0; will-change: transform; }
+
+/* v11 hero cap: the teardown run stays about 7 screens on normal displays, never 15 on very tall ones */
+.hero { height: min(760vh, 7600px); }
