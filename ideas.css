@@ -91,13 +91,10 @@ html.probing .dg .node.probed rect { stroke: var(--n-red); stroke-width: 1.6; }
 .wf__t b { color: #23262D; font-weight: 500; }
 .wf__note { font-size: 14px; line-height: 1.55; color: #5C616B; margin: 10px 0 0; }
 
-/* 2b. live CI badge in project headers */
-.nt-meta .ci { display: inline-flex; align-items: center; gap: 6px; margin-left: 4px; padding: 2px 9px; border-radius: 999px; text-decoration: none;
-  font: 11px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; letter-spacing: 0; text-transform: none; color: #23262D;
-  border: 1px solid rgba(35,38,45,.16); background: rgba(255,255,255,.7); }
-.nt-meta .ci i { width: 7px; height: 7px; border-radius: 50%; background: #8A8F98; }
-.nt-meta .ci.ok i { background: #1F9D55; }
-.nt-meta .ci:hover, .nt-meta .ci:focus-visible { border-color: rgba(35,38,45,.4); }
+/* 2b. CI badge in project headers (GitHub's official workflow badge) */
+.nt-meta .ci { display: inline-flex; align-items: center; margin-left: 4px; line-height: 0; border-radius: 4px; }
+.nt-meta .ci img { height: 20px; width: auto; display: block; }
+.nt-meta .ci:focus-visible { outline: 2px solid var(--n-red); outline-offset: 2px; }
 
 /* 9. print / save as PDF: a clean document. No 3D, no animation, links spelled out. */
 @media print {

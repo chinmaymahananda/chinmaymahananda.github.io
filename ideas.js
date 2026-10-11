@@ -184,30 +184,16 @@
   fetch('assets/wave_systolic.json').then(r => r.json()).then(j => { D = j; draw(); }).catch(() => { fig.hidden = true; });
 })();
 
-/* ---------- 2b. live CI status from GitHub's public API, shown in each project's header ---------- */
+/* ---------- 2b. live CI status: GitHub's official workflow badges (served by github.com, live, no API limits) ---------- */
 (() => {
-  const metas = [...document.querySelectorAll('.nt-proj .nt-meta')];
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-  const ago = iso => { const s = (new Date(iso) - Date.now()) / 1000, a = Math.abs(s);
-    const [u, d] = a < 3600 ? ['minute', 60] : a < 86400 ? ['hour', 3600] : a < 86400 * 30 ? ['day', 86400] : a < 86400 * 365 ? ['month', 86400 * 30] : ['year', 86400 * 365];
-    return rtf.format(Math.round(s / d), u); };
-  metas.forEach(m => {
-    const repo = m.querySelector('code')?.textContent.trim(); if (!repo || !/^[\w.-]+$/.test(repo)) return;
-    const key = 'ci:' + repo, show = run => {
-      if (!run) return;
-      const ok = run.conclusion === 'success', a = document.createElement('a');
-      a.className = 'ci ' + (ok ? 'ok' : 'other'); a.href = run.html_url; a.target = '_blank'; a.rel = 'noopener';
-      a.innerHTML = `<i aria-hidden="true"></i>${ok ? 'CI passing' : 'CI: ' + (run.conclusion || run.status)} · ${ago(run.updated_at)}`;
-      a.title = run.name; m.appendChild(a);
-    };
-    try { const c = JSON.parse(sessionStorage.getItem(key) || 'null'); if (c && Date.now() - c.at < 3600e3) return show(c.run); } catch (e) {}
-    fetch(`https://api.github.com/repos/chinmaymahananda/${repo}/actions/runs?per_page=1&branch=main`, { headers: { Accept: 'application/vnd.github+json' } })
-      .then(r => r.ok ? r.json() : null).then(j => {
-        const w = j && j.workflow_runs && j.workflow_runs[0]; if (!w) return;
-        const run = { conclusion: w.conclusion, status: w.status, html_url: w.html_url, updated_at: w.updated_at, name: w.name };
-        try { sessionStorage.setItem(key, JSON.stringify({ at: Date.now(), run })); } catch (e) {}
-        show(run);
-      }).catch(() => {});
+  const WF = { 'mx-conformance': 'conformance.yml', 'riscv-pipelined-core': 'test.yml', 'systolic-mac-array': 'test.yml' };
+  document.querySelectorAll('.nt-proj .nt-meta').forEach(m => {
+    const repo = m.querySelector('code')?.textContent.trim(), wf = WF[repo]; if (!wf) return;
+    const base = `https://github.com/chinmaymahananda/${repo}/actions/workflows/${wf}`;
+    const a = document.createElement('a'); a.className = 'ci'; a.href = base; a.target = '_blank'; a.rel = 'noopener';
+    const img = new Image(); img.src = base + '/badge.svg?branch=main'; img.alt = `CI status for ${repo}`; img.height = 20; img.decoding = 'async'; img.loading = 'lazy';
+    img.onerror = () => a.remove();
+    a.appendChild(img); m.appendChild(a);
   });
 })();
 
