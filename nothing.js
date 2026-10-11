@@ -605,10 +605,23 @@
 (() => {
   let off = false; try { off = localStorage.getItem('motion') === 'off'; } catch (e) {}
   const cards = document.querySelectorAll('.ab-card, .ab-bio');
-  if (off || !('IntersectionObserver' in window) || !cards.length) return;
+  if (off || !cards.length) return;
   document.documentElement.classList.add('icoanim');
-  const io = new IntersectionObserver(es => es.forEach(e => {
-    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-  }), { threshold: .45 });
-  cards.forEach(c => io.observe(c));
+  let left = [...cards], queued = false;
+  const check = () => {
+    queued = false;
+    const line = innerHeight * .85;
+    left = left.filter(c => { if (c.getBoundingClientRect().top < line) { c.classList.add('in'); return false; } return true; });
+    if (!left.length) removeEventListener('scroll', onScroll);
+  };
+  const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+  addEventListener('scroll', onScroll, { passive: true });
+  check();
+})();
+
+/* engine tier for nothing.css: html.wk = WebKit (Safari, and all iOS browsers) */
+(() => {
+  const ua = navigator.userAgent;
+  const wk = /AppleWebKit/.test(ua) && (!/Chrome|Chromium|Edg|OPR/.test(ua) || /CriOS|FxiOS|EdgiOS/.test(ua));
+  if (wk) document.documentElement.classList.add('wk');
 })();
