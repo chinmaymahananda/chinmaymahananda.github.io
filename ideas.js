@@ -184,14 +184,14 @@
   fetch('assets/wave_systolic.json').then(r => r.json()).then(j => { D = j; draw(); }).catch(() => { fig.hidden = true; });
 })();
 
-/* ---------- 2b. live CI status: GitHub's official workflow badges (served by github.com, live, no API limits) ---------- */
+/* ---------- 2b. live CI status: shields.io workflow badges (live, short 'CI' label, no cookies, no API limits on visitors) ---------- */
 (() => {
   const WF = { 'mx-conformance': 'conformance.yml', 'riscv-pipelined-core': 'test.yml', 'systolic-mac-array': 'test.yml' };
   document.querySelectorAll('.nt-proj .nt-meta').forEach(m => {
     const repo = m.querySelector('code')?.textContent.trim(), wf = WF[repo]; if (!wf) return;
     const base = `https://github.com/chinmaymahananda/${repo}/actions/workflows/${wf}`;
     const a = document.createElement('a'); a.className = 'ci'; a.href = base; a.target = '_blank'; a.rel = 'noopener';
-    const img = new Image(); img.src = base + '/badge.svg?branch=main'; img.alt = `CI status for ${repo}`; img.height = 20; img.decoding = 'async'; img.loading = 'lazy';
+    const img = new Image(); img.src = `https://img.shields.io/github/actions/workflow/status/chinmaymahananda/${repo}/${wf}?branch=main&label=CI`; img.alt = `CI status for ${repo}`; img.height = 20; img.decoding = 'async'; img.loading = 'lazy';
     img.onerror = () => a.remove();
     a.appendChild(img); m.appendChild(a);
   });
