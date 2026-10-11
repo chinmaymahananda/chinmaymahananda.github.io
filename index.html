@@ -8,11 +8,18 @@
 <meta property="og:title" content="Chinmay Mahananda | Design verification and RTL">
 <meta property="og:description" content="Golden models, RTL, and signoff. Every number on the page links to a repo.">
 <meta property="og:url" content="https://chinmaymahananda.github.io">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://chinmaymahananda.github.io/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Chinmay Mahananda, design verification and RTL design, beside a 3D chip package">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0A0F1F">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230A0F1F'/><g fill='%23FFB547'><rect x='7' y='7' width='5' height='5'/><rect x='14' y='7' width='5' height='5' opacity='.6'/><rect x='21' y='7' width='5' height='5' opacity='.3'/><rect x='7' y='14' width='5' height='5' opacity='.6'/><rect x='14' y='14' width='5' height='5'/><rect x='21' y='14' width='5' height='5' opacity='.6'/><rect x='7' y='21' width='5' height='5' opacity='.3'/><rect x='14' y='21' width='5' height='5' opacity='.6'/><rect x='21' y='21' width='5' height='5'/></g></svg>">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="nothing.css">
+<link rel="stylesheet" href="ideas.css">
 </head>
 <body>
 <a class="skip" href="#work">Skip to projects</a>
@@ -22,11 +29,13 @@
 
 <header class="nav">
   <a class="nav__name" href="#top">Chinmay Mahananda</a>
+  <a class="avail" href="#contact"><span class="avail__dot" aria-hidden="true"></span><span class="avail__l">Open to Spring and Summer 2027 co-op · DV / RTL</span><span class="avail__s">Open to 2027 co-op</span></a>
   <nav aria-label="Sections">
     <a href="#about">About</a>
     <a href="#work">Projects</a>
     <a href="#record">Background</a>
     <a href="#contact">Contact</a>
+    <button class="cmdk-btn" id="cmdkBtn" type="button" aria-haspopup="dialog" aria-label="Open command palette (Ctrl K)"><span aria-hidden="true">&gt;_</span><kbd>Ctrl K</kbd></button>
     <button class="motion" id="motion" type="button" aria-pressed="true">Motion on</button>
   </nav>
 </header>
@@ -238,6 +247,12 @@
           <canvas class="led" id="led" aria-label="Animated LED grid of 64 processing elements lighting in a diagonal wavefront" role="img"></canvas>
         </figure>
       </div>
+      <figure class="nt-fig wavefig" id="realwave">
+        <figcaption><span class="dotred"></span>A real simulation: <code>tb_systolic.v</code>, test 1, array at 4 × 4</figcaption>
+        <div class="wf"><svg class="wf__svg" role="img" aria-label="Waveform from the testbench: clock, clear, enable, and PE(0,0) a_in, b_in and accumulator, plus PE(0,1) a_in. The accumulator goes 6, -27, 36, 72 over four clocks, and a_in reaches PE(0,1) one clock later."></svg></div>
+        <div class="wf__ctl"><input type="range" min="0" max="1000" step="1" value="420" aria-label="Simulation time"><output class="wf__t"></output></div>
+        <p class="wf__note">Regenerated with Icarus Verilog from the repo; all 20 tests pass. Drag to read values: <code>acc</code> adds <code>a_in × b_in</code> on each clock, and <code>a_in</code> reaches PE(0,1) one clock later.</p>
+      </figure>
       <figure class="nt-fig" data-diagram="cnn">
         <figcaption><span class="dotred"></span><code>top_accelerator.v</code>: one start, one done</figcaption>
         <div class="nt-scroll"><svg viewBox="0 0 1200 380" class="dg" role="img" aria-label="CNN pipeline: 8 by 8 image into conv1_controller with 4 channels, requant_bridge, conv2_controller with 8 channels, requant_bridge, fc_controller 128 to 10, then logits. Each layer has its own memory module and uses mac_unit."></svg></div>
@@ -295,7 +310,7 @@
         <h3>Credentials</h3>
         <p>Northeastern Seattle Campus Scholarship and International Impact Award</p>
         <p>Emertxe Certified Embedded Professional (ECEP), credential 24032F_023. <a href="https://certificate.emertxe.com/?id=24032F_023">Verify</a></p>
-        <p>First author, <em>Design of 6G Antenna</em>, IJNRD, 2024</p>
+        <p>First author, <em>Design of 6G Antenna</em>, IJNRD, 2024. <a href="https://www.ijnrd.org/papers/IJNRD2406113.pdf">Read</a></p>
       </div>
       <div class="nt-cell">
         <h3>Experience</h3>
@@ -328,5 +343,6 @@
 <script src="assets/vendor/lenis.min.js"></script>
 <script src="script.js"></script>
 <script src="nothing.js"></script>
+<script src="ideas.js"></script>
 </body>
 </html>

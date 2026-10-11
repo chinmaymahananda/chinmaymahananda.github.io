@@ -436,19 +436,23 @@
     });
   });
 
-  /* ---------- 8. tilt-in: cards swing up from an angle and settle flat ---------- */
-  if (!reduce) $$('.nt-stats > div, .nt-fig, .nt-cards > li, .nt-gaps > div, .nt-demo, .ab-card').filter(el => !(isM() && el.querySelector('svg.dg'))).forEach(el => {
-    el.classList.add('tilt');
-    const idx = [...el.parentNode.children].indexOf(el) % 4;
-    let lastE = -1;
-    job(el, (q, t, skipped) => {
-      const e = skipped ? 1 : Math.round(ease(clamp(q * 1.9 - idx * .12)) * 500) / 500;
-      if (e === lastE) return; lastE = e;
-      if (e >= 1) { el.style.transform = 'none'; el.style.opacity = 1; return; }
-      el.style.transform = `perspective(1400px) rotateX(${((1 - e) * 16).toFixed(2)}deg) translateY(${((1 - e) * 50).toFixed(1)}px) scale(${(.965 + .035 * e).toFixed(4)})`;
-      el.style.opacity = (.25 + .75 * e).toFixed(3);
-    });
-  });
+  /* ---------- 8. soft reveal: cards fade and rise a little, once, as they arrive ----------
+     (replaces the scroll-scrubbed tilt-in. A CSS transition on opacity and transform runs on the compositor and
+     never follows the scroll position frame by frame. Checked per scroll frame, so a fast fling or a jump
+     past a card still reveals it.) */
+  if (!reduce) {
+    let pending = $$('.nt-stats > div, .nt-fig, .nt-cards > li, .nt-gaps > div, .nt-demo, .ab-card');
+    pending.forEach(el => { el.classList.add('rise'); el.style.setProperty('--d', ([...el.parentNode.children].indexOf(el) % 4) * 70 + 'ms'); });
+    let q = false;
+    const check = () => {
+      q = false; const line = innerHeight * .92;
+      pending = pending.filter(el => { if (el.getBoundingClientRect().top < line) { el.classList.add('up'); return false; } return true; });
+      if (!pending.length) removeEventListener('scroll', onS);
+    };
+    const onS = () => { if (!q) { q = true; requestAnimationFrame(check); } };
+    addEventListener('scroll', onS, { passive: true }); addEventListener('resize', onS);
+    requestAnimationFrame(check);
+  }
 
   /* ---------- 9. stacking cards: each Background cell pins, the next slides over it ---------- */
   const grid = document.querySelector('.nt-grid');
@@ -559,19 +563,8 @@
     });
   }
 
-  /* ---------- 12. velocity lean: projects tilt with scroll speed and spring back ---------- */
+  /* ---------- 12. velocity lean: removed (skewing projects with scroll speed read as a glitch) ---------- */
   let leanFn = null;
-  if (!reduce && !matchMedia('(pointer: coarse)').matches) {
-    const leanEls = $$('.nt-proj'); leanEls.forEach(e => e.classList.add('lean'));
-    let lastY = scrollY, vel = 0, lastSk = 0;
-    leanFn = () => {
-      const dy = scrollY - lastY; lastY = scrollY;
-      vel += (clamp(dy, -120, 120) - vel) * .14;
-      const sk = Math.round(clamp(vel * .045, -1.6, 1.6) * 100) / 100;
-      if (sk === lastSk) return; lastSk = sk;
-      for (const e of leanEls) { const r = e.getBoundingClientRect(); if (r.bottom < -100 || r.top > VH + 100) { if (e.style.transform) e.style.transform = ''; continue; } e.style.transform = Math.abs(sk) < .03 ? '' : `skewY(${-sk}deg)`; }
-    };
-  }
 
   /* ---------- nav goes black over this section ---------- */
   const nt = document.getElementById('nt'), nav = document.querySelector('.nav');

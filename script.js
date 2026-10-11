@@ -122,6 +122,12 @@
     const id = a.getAttribute('href'); if (id.length < 2) return; const el = document.querySelector(id); if (!el) return;
     e.preventDefault(); scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: reduce ? 'auto' : 'smooth' });
   }));
+  // one scroll helper for links created later (section bus, command palette, ring morph)
+  window.__go = (t, instant) => {
+    if (lenis) { lenis.scrollTo(t === '#top' ? 0 : t, { offset: -70, immediate: !!instant }); return; }
+    const el = document.querySelector(t); if (!el) return;
+    scrollTo({ top: el.getBoundingClientRect().top + scrollY - 70, behavior: instant || reduce ? 'auto' : 'smooth' });
+  };
 
   /* ---------- device tier: pick the best settings this hardware can hold, from the first frame ---------- */
   const TIER = (() => {

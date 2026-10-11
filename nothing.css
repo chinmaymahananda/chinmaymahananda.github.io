@@ -475,3 +475,10 @@ html.wk .nt-proj .nt-stats > div, html.wk .nt-proj .nt-fig, html.wk .nt-proj .nt
 html.wk .nt-proj .nt-gaps > .hot { background: #FFFFFF; }
 /* WebKit: ring cards keep their colour strip but go back to the original single dot texture (3D-turned cards repaint every frame) */
 html.wk .rc { background-image: radial-gradient(circle, #E6E9EE 1px, transparent 1.3px); background-size: 14px 14px; }
+
+/* soft reveal (replaces the tilt-in): fade and rise once, compositor-only, no scroll-scrubbing */
+.rise { opacity: 0; transform: translate3d(0, 18px, 0);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1) var(--d, 0ms), transform .7s cubic-bezier(.2,.7,.2,1) var(--d, 0ms); }
+.rise.up { opacity: 1; transform: none; }
+html.rm .rise { opacity: 1; transform: none; transition: none; }
+@media print { .rise { opacity: 1 !important; transform: none !important; transition: none !important; } }
