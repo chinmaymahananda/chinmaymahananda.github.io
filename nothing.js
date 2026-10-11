@@ -29,8 +29,10 @@
   function dotHeading(h) {
     const c = document.createElement('canvas'); c.setAttribute('aria-hidden', 'true'); h.appendChild(c);
     const ctx = c.getContext('2d'); h.classList.add('js-dots');
-    let pts = [], W = 0, H = 0, dpr = 1, gap = 4, lastP = -1, frameN = 0, builtW = 0;
+    let pts = [], W = 0, H = 0, dpr = 1, gap = 4, lastP = -1, frameN = 0, builtW = 0, acc = '#D71921';
     function build() {
+      // accent dots follow the section's colour (each project sets its own --n-red)
+      acc = getComputedStyle(h).getPropertyValue('--n-red').trim() || '#D71921';
       const r = h.getBoundingClientRect(); W = Math.ceil(r.width); H = Math.ceil(r.height) + 6; builtW = innerWidth;
       dpr = Math.min(2, devicePixelRatio || 1);
       c.width = W * dpr; c.height = H * dpr; c.style.width = W + 'px'; c.style.height = H + 'px';
@@ -75,7 +77,7 @@
         const b = Math.min(BK - 1, (a * BK) | 0) + (q.red ? BK : 0);
         paths[b].moveTo(x + r, y); paths[b].arc(x, y, r, 0, 6.283);
       }
-      for (let b = 0; b < BK * 2; b++) { ctx.globalAlpha = ((b % BK) + .5) / BK; ctx.fillStyle = b >= BK ? '#D71921' : '#26282D'; ctx.fill(paths[b]); }
+      for (let b = 0; b < BK * 2; b++) { ctx.globalAlpha = ((b % BK) + .5) / BK; ctx.fillStyle = b >= BK ? acc : '#26282D'; ctx.fill(paths[b]); }
       ctx.globalAlpha = 1;
     }
     const ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
@@ -355,6 +357,7 @@
     const size = () => { const r = led.getBoundingClientRect(); dpr = Math.min(2, devicePixelRatio || 1); W = r.width; H = r.height; led.width = W * dpr; led.height = H * dpr; };
     size(); addEventListener('resize', size);
     const N = 8, LOOP = 2 * N + 3, D = .42;
+    const accL = getComputedStyle(led).getPropertyValue('--n-red').trim() || '#D71921';
     job(led, (p, t) => {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
       const m = Math.min(W, H), cell = m / (N + 2.2), ox = (W - cell * N) / 2 + cell * .4, oy = (H - cell * N) / 2 + cell * .4;
@@ -372,13 +375,13 @@
         }
       }
       for (let b = 0; b < LB; b++) { ctx.globalAlpha = (b + .5) / LB; ctx.fillStyle = '#26282D'; ctx.fill(bw[b]); }
-      ctx.globalAlpha = 1; ctx.fillStyle = '#D71921'; ctx.fill(br);
+      ctx.globalAlpha = 1; ctx.fillStyle = accL; ctx.fill(br);
       // operands entering: activations from the left, weights from the top, each lane one cycle later
       ctx.globalAlpha = 1;
       for (let k = 0; k < N; k++) {
         const s = c - k;
         if (s > -1 && s < N) {
-          ctx.fillStyle = '#D71921'; ctx.beginPath(); ctx.arc(ox + (s + .5) * cell - cell * .5, oy + k * cell + cell * .5 - cell * .42, cell * .06, 0, 6.283); ctx.fill();
+          ctx.fillStyle = accL; ctx.beginPath(); ctx.arc(ox + (s + .5) * cell - cell * .5, oy + k * cell + cell * .5 - cell * .42, cell * .06, 0, 6.283); ctx.fill();
           ctx.fillStyle = '#26282D'; ctx.beginPath(); ctx.arc(ox + k * cell + cell * .5 - cell * .42, oy + (s + .5) * cell - cell * .5, cell * .06, 0, 6.283); ctx.fill();
         }
       }
@@ -421,7 +424,7 @@
   }
 
   /* ---------- 7. paragraphs light up word by word as you read ---------- */
-  if (!reduce) $$('.nt-lede, .nt-sum, .nt-ask').forEach(p => {
+  if (!reduce) $$('.nt-lede, .nt-sum, .nt-ask, .nt-bio').forEach(p => {
     if (p.children.length) return; // only plain-text paragraphs
     const words = p.textContent.trim().split(/\s+/); p.textContent = '';
     const spans = words.map((w, i) => { const s = document.createElement('span'); s.className = 'w'; s.textContent = w; p.append(s); if (i < words.length - 1) p.append(' '); s.style.opacity = .15; return s; });
@@ -434,7 +437,7 @@
   });
 
   /* ---------- 8. tilt-in: cards swing up from an angle and settle flat ---------- */
-  if (!reduce) $$('.nt-stats > div, .nt-fig, .nt-cards > li, .nt-gaps > div, .nt-demo').filter(el => !(isM() && el.querySelector('svg.dg'))).forEach(el => {
+  if (!reduce) $$('.nt-stats > div, .nt-fig, .nt-cards > li, .nt-gaps > div, .nt-demo, .ab-card').filter(el => !(isM() && el.querySelector('svg.dg'))).forEach(el => {
     el.classList.add('tilt');
     const idx = [...el.parentNode.children].indexOf(el) % 4;
     let lastE = -1;
@@ -595,4 +598,17 @@
     requestAnimationFrame(tick);
   }
   requestAnimationFrame(tick);
+})();
+
+/* About icons (Lucide, ISC licence): each icon draws its own outline once, when its card comes into view.
+   Motion switched off: icons are simply shown. */
+(() => {
+  let off = false; try { off = localStorage.getItem('motion') === 'off'; } catch (e) {}
+  const cards = document.querySelectorAll('.ab-card, .ab-bio');
+  if (off || !('IntersectionObserver' in window) || !cards.length) return;
+  document.documentElement.classList.add('icoanim');
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .45 });
+  cards.forEach(c => io.observe(c));
 })();

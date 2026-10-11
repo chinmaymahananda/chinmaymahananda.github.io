@@ -324,3 +324,137 @@ html.m .trace__pkt { width: 10px; height: 10px; margin: -5px 0 0 -5px; }
 .nt-grid.stack { padding-bottom: min(12vh, 110px); }
 .nt-ring { height: min(420vh, 4300px); }
 @media (max-width: 700px) { .nt-ring { height: min(360vh, 3400px); } }
+
+/* ============ v12: About, frosted glass, one colour per project ============ */
+/* glass: translucent white over a colour wash, so the blur has something to show */
+.glass { background: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.8); border-radius: 28px;
+  box-shadow: 0 0 0 1px rgba(35,38,45,.06), inset 0 1px 0 rgba(255,255,255,.95), 0 30px 60px -38px rgba(35,38,45,.35);
+  backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6); }
+
+/* About */
+.nt-about { padding: min(18vh, 170px) var(--pad) min(4vh, 40px); }
+.ab-grid { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; margin-top: 56px; max-width: 1240px; }
+.ab-grid::before { content: ""; position: absolute; inset: -16% -8%; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(28% 34% at 24% 36%, rgba(180,83,9,.24), transparent 70%),
+    radial-gradient(26% 32% at 56% 26%, rgba(29,78,216,.22), transparent 70%),
+    radial-gradient(28% 34% at 78% 64%, rgba(4,120,87,.22), transparent 70%),
+    radial-gradient(26% 30% at 40% 74%, rgba(109,40,217,.2), transparent 70%); }
+.ab-bio { padding: clamp(24px, 3.4vw, 44px); display: flex; align-items: flex-end; }
+.nt-bio { margin: 0; max-width: 34em; font-size: clamp(18px, 1.55vw, 21px); line-height: 1.6; color: #2B2F36; }
+.ab-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.ab-card { padding: 22px; }
+.ab-card h3 { font: 500 17px/1.25 var(--n-sans); color: var(--n-fg); margin: 18px 0 14px; }
+.ab-card .chips li { background: rgba(255,255,255,.65); }
+.ab-ico { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 14px; background: #23262D; color: #FFFFFF; }
+.ab-ico svg { width: 24px; height: 24px; overflow: visible; }
+
+/* icons draw their outline once when the card arrives (class added by nothing.js) */
+.icoanim .ab-ico svg > * { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1s cubic-bezier(.6,0,.2,1); }
+.icoanim .in .ab-ico svg > * { stroke-dashoffset: 0; }
+.icoanim .in .ab-ico svg > :nth-child(2) { transition-delay: .12s; }
+.icoanim .in .ab-ico svg > :nth-child(3) { transition-delay: .24s; }
+.icoanim .in .ab-ico svg > :nth-child(4) { transition-delay: .32s; }
+.icoanim .in .ab-ico svg > :nth-child(5) { transition-delay: .4s; }
+.icoanim .in .ab-ico svg > :nth-child(n+6) { transition-delay: .48s; }
+/* after that, each icon answers a hover with its own small motion */
+.ab-ico svg > * { transform-box: fill-box; transform-origin: center; }
+.ab-card:hover .ico-cpu path { animation: ab-pin 1s ease-in-out infinite; }
+.ab-card:hover .ico-cpu path:nth-of-type(even) { animation-delay: .25s; }
+.ab-card:hover .ico-board circle { animation: ab-pad 1.2s ease-in-out infinite; }
+.ab-card:hover .ico-board circle + path + circle { animation-delay: .6s; }
+.ab-card:hover .ico-wave path { stroke-dasharray: .32 .68; animation: ab-run 1.1s linear infinite; }
+.ab-card:hover .ico-code path:nth-child(1) { animation: ab-r .9s ease-in-out infinite; }
+.ab-card:hover .ico-code path:nth-child(2) { animation: ab-l .9s ease-in-out infinite; }
+@keyframes ab-pin { 50% { opacity: .25; } }
+@keyframes ab-pad { 50% { transform: scale(1.35); } }
+@keyframes ab-run { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes ab-r { 50% { transform: translateX(1.5px); } }
+@keyframes ab-l { 50% { transform: translateX(-1.5px); } }
+html.rm .ab-card .ab-ico svg > * { animation: none !important; }
+
+/* one accent per project: every rule that used --n-red inside an article now takes that project's colour */
+#mxgold,   .rc[href="#mxgold"]   { --n-red: #B45309; --acc-rgb: 180, 83, 9; }
+#rv32i,    .rc[href="#rv32i"]    { --n-red: #1D4ED8; --acc-rgb: 29, 78, 216; }
+#systolic, .rc[href="#systolic"] { --n-red: #047857; --acc-rgb: 4, 120, 87; }
+#pokemon,  .rc[href="#pokemon"]  { --n-red: #6D28D9; --acc-rgb: 109, 40, 217; }
+
+.nt-proj { position: relative; isolation: isolate; border-top: 2px solid var(--n-red); }
+.nt-proj::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(36% 22% at 70% 14%, rgba(var(--acc-rgb), .24), transparent 70%),
+    radial-gradient(36% 20% at 30% 50%, rgba(var(--acc-rgb), .16), transparent 70%),
+    radial-gradient(36% 20% at 70% 86%, rgba(var(--acc-rgb), .2), transparent 70%); }
+.nt-proj .dotred { box-shadow: 0 0 10px rgba(var(--acc-rgb), .7); }
+.nt-proj .dg .node.mine rect { fill: rgba(var(--acc-rgb), .08); }
+.nt-proj .nt-cards code { background: rgba(var(--acc-rgb), .09); }
+
+/* project panels become glass over their own colour */
+.nt-proj .nt-stats > div, .nt-proj .nt-fig, .nt-proj .nt-cards > li, .nt-proj .nt-gaps > div:not(.hot), .nt-proj .nt-demo {
+  background: rgba(255,255,255,.55) !important; border-color: rgba(255,255,255,.85) !important;
+  box-shadow: 0 0 0 1px rgba(var(--acc-rgb), .14), inset 0 1px 0 #FFFFFF, 0 24px 50px -36px rgba(var(--acc-rgb), .5);
+  backdrop-filter: blur(16px) saturate(1.5); -webkit-backdrop-filter: blur(16px) saturate(1.5); }
+.nt-proj .nt-gaps > .hot { background: rgba(var(--acc-rgb), .07); }
+
+/* failures stay red in every project, whatever its accent */
+.nt .pipe.fail .tok { background: #D71921; box-shadow: 0 0 8px #D71921; }
+.nt .pipe.fail span:nth-child(2) { border-color: #D71921; color: #D71921; }
+.nt .wv .bad .en { stroke: #D71921; }
+.nt .block i.z { background: #D71921; box-shadow: 0 0 10px #D71921; }
+
+/* ring index cards carry their project's colour */
+.rc { border-top: 4px solid var(--n-red);
+  background-color: #FFFFFF;
+  background-image: radial-gradient(circle, rgba(var(--acc-rgb), .2) 1px, transparent 1.3px), linear-gradient(160deg, rgba(var(--acc-rgb), .09), rgba(255,255,255,0) 60%);
+  background-size: 14px 14px, 100% 100%; }
+.rc:hover, .rc:focus-visible { border-color: var(--n-red); }
+
+/* nav over white turns to glass */
+.nav.solid.dark::before { background: rgba(255,255,255,.55); border-bottom-color: rgba(35,38,45,.08);
+  backdrop-filter: blur(20px) saturate(1.8); -webkit-backdrop-filter: blur(20px) saturate(1.8); }
+
+/* phones and browsers without blur: keep the look, drop the cost */
+html.m .nt-proj .nt-stats > div, html.m .nt-proj .nt-fig, html.m .nt-proj .nt-cards > li, html.m .nt-proj .nt-gaps > div:not(.hot), html.m .nt-proj .nt-demo {
+  backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255,255,255,.8) !important; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgba(255,255,255,.88); }
+  .nav.solid.dark::before { background: rgba(255,255,255,.92); }
+}
+
+@media (max-width: 1000px) { .ab-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { .ab-skills { grid-template-columns: minmax(0, 1fr); } .ab-grid { margin-top: 36px; } }
+
+/* the ring's active pip takes the colour of the project it points at */
+.nt-ring__pips li.on:nth-child(1) { background: #B45309; box-shadow: 0 0 10px rgba(180,83,9,.5); }
+.nt-ring__pips li.on:nth-child(2) { background: #1D4ED8; box-shadow: 0 0 10px rgba(29,78,216,.5); }
+.nt-ring__pips li.on:nth-child(3) { background: #047857; box-shadow: 0 0 10px rgba(4,120,87,.5); }
+.nt-ring__pips li.on:nth-child(4) { background: #6D28D9; box-shadow: 0 0 10px rgba(109,40,217,.5); }
+
+/* phone nav: About adds a link, so keep every item on one line */
+.nav__name, .nav nav a, .motion { white-space: nowrap; }
+@media (max-width: 440px) {
+  .nav { padding-left: 16px; padding-right: 16px; }
+  .nav nav { gap: 12px; font-size: 14px; }
+  .nav__name { font-size: 14.5px; }
+  .motion { padding: 6px 9px; gap: 6px; font-size: 12px; }
+}
+@media (max-width: 420px) { .nav nav a[href="#about"] { display: none; } }
+@media (max-width: 360px) {
+  .nav nav { gap: 10px; margin-left: 10px; }
+  .nav__name { font-size: 13.5px; }
+  .motion { padding: 6px 8px; font-size: 11.5px; }
+}
+
+/* About: interests card, full width under the grid */
+.ab-more { grid-column: 1 / -1; padding: 24px 26px; }
+.ab-more h3 { margin-top: 0; }
+.ab-int { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.ab-int li { display: flex; gap: 14px; align-items: flex-start; }
+.ab-int .ab-ico { flex: none; width: 40px; height: 40px; border-radius: 12px; }
+.ab-int .ab-ico svg { width: 21px; height: 21px; }
+.ab-int p { margin: 0; font-size: 15px; line-height: 1.5; color: #4A4F59; }
+.ab-int b { display: block; font: 500 16px/1.3 var(--n-sans); color: var(--n-fg); margin-bottom: 3px; }
+.ab-int li:hover .ab-ico svg { animation: ab-bob 1.2s ease-in-out infinite; }
+@keyframes ab-bob { 50% { transform: translateY(-2px) rotate(-4deg); } }
+html.rm .ab-int .ab-ico svg { animation: none !important; }
+@media (max-width: 800px) { .ab-int { grid-template-columns: minmax(0, 1fr); } }
