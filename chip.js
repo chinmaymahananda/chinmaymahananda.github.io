@@ -111,7 +111,7 @@
   const finePointer = matchMedia('(pointer: fine)').matches;
   let lenis = null;
   if (!reduce && window.Lenis && finePointer) {   // smooth wheel for mouse/trackpad only; touch keeps native momentum
-    lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+    lenis = new Lenis({ lerp: 0.085, smoothWheel: true }); window.__lenis = lenis;
     $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
       const t = a.getAttribute('href'); if (t.length < 2) return;
       e.preventDefault(); lenis.scrollTo(t === '#top' ? 0 : t, { offset: -70 });
@@ -166,7 +166,7 @@
 
   function setBeats(p) {
     if (reduce || !gl) { beats.forEach((b, i) => { b.style.opacity = i === 0 ? 1 : 0; }); return; }
-    const o = [1 - smooth(.06, .12, p), smooth(.4, .46, p) * (1 - smooth(.58, .64, p)), smooth(.86, .93, p)];
+    const o = [1 - smooth(.15, .21, p), smooth(.34, .4, p) * (1 - smooth(.62, .68, p)), smooth(.8, .86, p)];
     beats.forEach((b, i) => { const v = Math.round(o[i] * 200) / 200; if (b._o === v) return; b._o = v; b.style.opacity = v; b.style.transform = `translate3d(0, ${((1 - v) * 24).toFixed(1)}px, 0)`; b.setAttribute('aria-hidden', v < .5); });
     hint.style.opacity = 1 - smooth(.02, .06, p);
   }
@@ -176,24 +176,24 @@
     const renderer = new T.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
     renderer.setClearColor(0x000000, 0);
     const scene = new T.Scene();
-    scene.fog = new T.Fog(0x0A0F1F, 150, 420);
+    scene.fog = new T.Fog(0x000000, 150, 420);
     const cam = new T.PerspectiveCamera(36, 1, 0.1, 900);
-    scene.add(new T.AmbientLight(0x8090c0, 0.5));
+    scene.add(new T.AmbientLight(0xa09090, 0.5));
     const key = new T.DirectionalLight(0xffffff, 0.85); key.position.set(40, 90, 50); scene.add(key);
-    const rim = new T.DirectionalLight(0x6e8bff, 0.55); rim.position.set(-60, 30, -60); scene.add(rim);
-    const warm = new T.DirectionalLight(0xffb547, 0.25); warm.position.set(60, 10, -30); scene.add(warm);
+    const rim = new T.DirectionalLight(0xF44849, 0.75); rim.position.set(-60, 30, -60); scene.add(rim);
+    const warm = new T.DirectionalLight(0xffb27a, 0.3); warm.position.set(60, 10, -30); scene.add(warm);
 
     // studio environment for metal reflections, generated in code (no image assets)
     {
       const env = new T.Scene();
-      env.add(new T.Mesh(new T.SphereGeometry(50, 32, 16), new T.MeshBasicMaterial({ color: 0x0b1226, side: T.BackSide })));
+      env.add(new T.Mesh(new T.SphereGeometry(50, 32, 16), new T.MeshBasicMaterial({ color: 0x050505, side: T.BackSide })));
       const panel = (c, w, h, x, y, z) => { const m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({ color: c, side: T.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); env.add(m); };
-      panel(0xffffff, 40, 8, 0, 40, 10); panel(0x9fb2ff, 30, 30, -45, 10, 0); panel(0xffd08a, 12, 30, 45, 5, -10); panel(0x445080, 60, 20, 0, -20, -45);
+      panel(0xffffff, 40, 8, 0, 40, 10); panel(0xff8f80, 30, 30, -45, 10, 0); panel(0xffd0a0, 12, 30, 45, 5, -10); panel(0x553333, 60, 20, 0, -20, -45);
       const pm = new T.PMREMGenerator(renderer);
       scene.environment = pm.fromScene(env, 0.04).texture; pm.dispose();
     }
 
-    const AMBER = 0xffb547, BLUE = 0x6e8bff;
+    const AMBER = 0xF44849, BLUE = 0xd8c3a5;
     const lineMat = (c, o) => new T.LineBasicMaterial({ color: c, transparent: true, opacity: o });
     const fadeables = []; // materials whose opacity we drive
     const fade = (m) => { m.transparent = true; fadeables.push(m); return m; };
@@ -208,14 +208,14 @@
     /* ===== DIE (floorplan) ===== */
     const DW = 46, DD = 32;
     const dieG = new T.Group(); scene.add(dieG);
-    const die = new T.Mesh(new T.BoxGeometry(DW, 0.6, DD), new T.MeshStandardMaterial({ color: 0x10183a, roughness: .55, metalness: .45 }));
+    const die = new T.Mesh(new T.BoxGeometry(DW, 0.6, DD), new T.MeshStandardMaterial({ color: 0x15100f, roughness: .45, metalness: .6 }));
     die.position.y = -0.5; dieG.add(die);
     const dieEdge = new T.LineSegments(new T.EdgesGeometry(die.geometry), lineMat(BLUE, .5)); dieEdge.position.copy(die.position); dieG.add(dieEdge);
     const gp = [];
     for (let x = -DW / 2; x <= DW / 2; x += 1) gp.push(x, -0.19, -DD / 2, x, -0.19, DD / 2);
     for (let z = -DD / 2; z <= DD / 2; z += 1) gp.push(-DW / 2, -0.19, z, DW / 2, -0.19, z);
     const gg = new T.BufferGeometry(); gg.setAttribute('position', new T.Float32BufferAttribute(gp, 3));
-    dieG.add(new T.LineSegments(gg, lineMat(0x24305a, .45)));
+    dieG.add(new T.LineSegments(gg, lineMat(0x3a2a26, .45)));
     // seal ring around the die edge
     const sealRing = new T.Mesh(new T.RingGeometry(0, 1, 4, 1), new T.MeshBasicMaterial());
     sealRing.visible = false;
@@ -226,7 +226,7 @@
     const peGeo = new T.BoxGeometry(PS, 0.36, PS), peEdge = new T.EdgesGeometry(peGeo);
     const peMesh = new T.InstancedMesh(peGeo, new T.MeshStandardMaterial({ color: 0xffffff, roughness: .5, metalness: .2 }), N * N);
     const pes = [], ep = [], eSrc = peEdge.attributes.position.array, M0 = new T.Matrix4();
-    const PE_BASE = new T.Color(0x1b2552), PE_HOT = new T.Color(2.4, 1.55, .55), peCol = new T.Color();
+    const PE_BASE = new T.Color(0x2a1c1a), PE_HOT = new T.Color(2.6, .75, .7), peCol = new T.Color();
     for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
       const k = i * N + j; M0.makeTranslation(px(j), 0, pz(i)); peMesh.setMatrixAt(k, M0); peMesh.setColorAt(k, PE_BASE);
       for (let q = 0; q < eSrc.length; q += 3) ep.push(eSrc[q] + px(j), eSrc[q + 1], eSrc[q + 2] + pz(i));
@@ -238,9 +238,9 @@
     const wp = [];
     for (let k = 0; k < N; k++) { wp.push(-off - 1.6, .02, pz(k), off + 1.6, .02, pz(k)); wp.push(px(k), .02, -off - 1.6, px(k), .02, off + 1.6); }
     const wg = new T.BufferGeometry(); wg.setAttribute('position', new T.Float32BufferAttribute(wp, 3));
-    dieG.add(new T.LineSegments(wg, lineMat(0x3a4a8a, .7)));
+    dieG.add(new T.LineSegments(wg, lineMat(0x5a3a33, .7)));
     const pg = new T.SphereGeometry(0.15, 12, 8);
-    const actM = new T.MeshBasicMaterial({ color: AMBER }), wtM = new T.MeshBasicMaterial({ color: 0x9fb2ff });
+    const actM = new T.MeshBasicMaterial({ color: AMBER }), wtM = new T.MeshBasicMaterial({ color: 0xffd6c2 });
     const acts = [], wts = [];
     for (let k = 0; k < N; k++) { const a = new T.Mesh(pg, actM); dieG.add(a); acts.push(a); const w = new T.Mesh(pg, wtM); dieG.add(w); wts.push(w); }
     const glow = new T.PointLight(AMBER, 0, 14); glow.position.set(0, 3, 0); dieG.add(glow);
@@ -249,14 +249,14 @@
     const macros = [];
     function macro(x, z, w, d, h, label, stripes) {
       const g = new T.Group(); g.position.set(x, 0, z);
-      const box = new T.Mesh(new T.BoxGeometry(w, h, d), new T.MeshStandardMaterial({ color: 0x182250, roughness: .6, metalness: .25 }));
+      const box = new T.Mesh(new T.BoxGeometry(w, h, d), new T.MeshStandardMaterial({ color: 0x1c1414, roughness: .6, metalness: .3 }));
       box.position.y = h / 2 - 0.18; g.add(box);
       const e = new T.LineSegments(new T.EdgesGeometry(box.geometry), lineMat(BLUE, .7)); e.position.copy(box.position); g.add(e);
       if (stripes) {
         const sp = [];
         for (let s = 1; s < stripes; s++) { const zz = -d / 2 + s * d / stripes; sp.push(-w / 2 + .3, h - 0.17, zz, w / 2 - .3, h - 0.17, zz); }
         const sg = new T.BufferGeometry(); sg.setAttribute('position', new T.Float32BufferAttribute(sp, 3));
-        g.add(new T.LineSegments(sg, lineMat(0x3a4a8a, .8)));
+        g.add(new T.LineSegments(sg, lineMat(0x5a3a33, .8)));
       }
       dieG.add(g);
       macros.push({ g, label, top: new T.Vector3(x, h + 0.6, z) });
@@ -267,7 +267,7 @@
     macro(-15.5, 9.5, 10, 5, 0.5, null, 3);
 
     // die I/O pads (also the wire-bond landing sites)
-    const padXs = [], padGeo = new T.BoxGeometry(0.8, 0.25, 0.8), padMat = new T.MeshStandardMaterial({ color: 0x8a94b8, metalness: .9, roughness: .25 });
+    const padXs = [], padGeo = new T.BoxGeometry(0.8, 0.25, 0.8), padMat = new T.MeshStandardMaterial({ color: 0xb89a8a, metalness: .9, roughness: .25 });
     const padPts = [];
     for (let x = -DW / 2 + 1.5; x <= DW / 2 - 1.5; x += 1.6) for (const z of [-DD / 2 + .9, DD / 2 - .9]) padPts.push([x, z]);
     for (let z = -DD / 2 + 2.5; z <= DD / 2 - 2.5; z += 1.6) for (const x of [-DW / 2 + .9, DW / 2 - .9]) padPts.push([x, z]);
@@ -301,12 +301,12 @@
     /* ===== METAL STACK (Sky130: li1, met1..met5) ===== */
     // each layer: preferred routing direction, pitch and width scaled from the real stack's character
     const LAYERS = [
-      { name: 'li1, local interconnect', dir: 'h', pitch: 7, w: 2, col: '#7d8fd6', stubs: true },
-      { name: 'met1', dir: 'v', pitch: 9, w: 3, col: '#6e8bff' },
-      { name: 'met2', dir: 'h', pitch: 11, w: 3.5, col: '#8f7dff' },
-      { name: 'met3', dir: 'v', pitch: 18, w: 6, col: '#5aa6ff' },
-      { name: 'met4', dir: 'h', pitch: 26, w: 9, col: '#9fb2ff' },
-      { name: 'met5, power straps', dir: 'v', pitch: 90, w: 30, col: '#ffb547', power: true }
+      { name: 'li1, local interconnect', dir: 'h', pitch: 7, w: 2, col: '#9a86a8', stubs: true },
+      { name: 'met1', dir: 'v', pitch: 9, w: 3, col: '#c9785a' },
+      { name: 'met2', dir: 'h', pitch: 11, w: 3.5, col: '#d6a05a' },
+      { name: 'met3', dir: 'v', pitch: 18, w: 6, col: '#a47ac8' },
+      { name: 'met4', dir: 'h', pitch: 26, w: 9, col: '#e0b48a' },
+      { name: 'met5, power straps', dir: 'v', pitch: 90, w: 30, col: '#F44849', power: true }
     ];
     const TH = Math.round(TW * DD / DW);
     function metalTex(L) {
@@ -649,7 +649,7 @@
   let visible = true;
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(hero);
   let last = -1;
-  const nav = $('.nav');
+  const nav = $('.nav') || $('.bar');
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   function tick(time) {
     if (lenis) lenis.raf(time);

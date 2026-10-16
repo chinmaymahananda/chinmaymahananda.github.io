@@ -1,0 +1,68 @@
+/* v5 hero: the v4 chip teardown, re-themed for the dark coral die. Variables are scoped so they never touch the rest of the page. */
+.hero,.nt-work{--die:#000;--sub:#141414;--amber:#F44849;--blue:#d8c3a5;--bad:#F44849;--cond:"Plex",system-ui,sans-serif}
+.hero{--line:#2c2c2c;--ink:#f2f2f2;--dim:#b4b4b4;position:relative;height:min(760vh,7600px)}
+.hero__stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:radial-gradient(110% 85% at 60% 40%,#1d0c0c 0%,#000 68%)}
+.hero__fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;pointer-events:none}
+.no-gl .hero__fallback{opacity:.85}
+#die{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero__labels{position:absolute;inset:0;pointer-events:none;z-index:1}
+.hero__labels span{position:absolute;left:0;top:0;will-change:transform;transform:translate(-50%,-50%);font:400 11px/1 var(--mono);color:var(--ink);background:rgba(0,0,0,.78);border:1px solid #333;padding:5px 7px;white-space:nowrap;opacity:0;transition:opacity .3s}
+.hero__labels span.on{opacity:1}
+.hero__labels span.call{transform:translate(14px,-50%);padding-left:10px;border-color:rgba(244,72,73,.55)}
+.hero__labels span.call::before{content:"";position:absolute;right:100%;top:50%;width:22px;height:1px;background:rgba(244,72,73,.8)}
+/* the text sits on a solid dark band so it always reads clearly over the chip */
+.hero__stage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:62%;pointer-events:none;z-index:1;
+  background:linear-gradient(to top,#000 0%,rgba(0,0,0,.9) 30%,rgba(0,0,0,.55) 62%,rgba(0,0,0,0) 100%)}
+.hero__text{position:absolute;left:var(--pad);right:var(--pad);bottom:clamp(48px,11vh,110px);pointer-events:none;z-index:2}
+.beat{position:absolute;left:0;bottom:0;max-width:52rem;text-shadow:0 2px 24px #000}
+.beat--2,.beat--3{opacity:0}
+.beat .chap__no{display:block;margin-bottom:18px;color:#a0a0a0}
+.hero h1{font:400 clamp(52px,9vw,148px)/.9 var(--sans);letter-spacing:-.05em;margin:0 0 22px;color:#fff}
+.hero .lede{font-size:clamp(16px,1.5vw,19px);color:#c8c8c8;max-width:34rem;margin:0}
+.hero .big{font:400 clamp(32px,4.6vw,66px)/1.04 var(--sans);letter-spacing:-.035em;margin:0;max-width:17em;color:#fff}
+.hero__hint{position:absolute;right:var(--pad);bottom:clamp(48px,11vh,110px);margin:0;font:400 12px/1 var(--mono);color:#a0a0a0;z-index:2}
+.no-gl .hero{height:auto}
+.no-gl .hero__stage{position:relative;height:92vh}
+.no-gl .hero__hint{display:none}
+@media (max-width:560px){.hero__hint{display:none}}
+@media (max-width:700px){.hero__labels span.call{font-size:10px;padding:3px 5px 3px 7px}}
+
+/* scroll position as a waveform, along the bottom edge of the top bar */
+.bar .wavebar{position:absolute;left:0;right:0;bottom:-7px;height:14px;pointer-events:none}
+#wave{width:100%;height:14px;display:block}
+#wave path{fill:none;stroke:#2a2a2a;stroke-width:1.2}
+#wave path.done{stroke:var(--coral)}
+#wavecursor{position:absolute;top:0;left:0;width:1px;height:14px;background:var(--coral)}
+
+/* v4 motion switch, in v5 style */
+.bar .motion{display:inline-flex;align-items:center;gap:8px;border-radius:0}
+.bar .motion::before{content:"";width:6px;height:6px;border-radius:50%;background:#5a5a5a}
+.bar .motion[aria-pressed="true"]::before{background:var(--coral);box-shadow:0 0 8px var(--coral)}
+
+/* demo widgets inside the projects (segmented buttons, scale block, pipeline, waveform) */
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);overflow:hidden;margin-bottom:20px}
+.seg button{font:400 13px/1 var(--mono);color:var(--dim);background:transparent;border:0;padding:11px 14px;cursor:pointer;min-height:40px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-checked="true"]{background:var(--coral);color:#000}
+.seg button:hover:not([aria-checked="true"]){color:var(--ink)}
+.readout{font:400 14px/1.4 var(--mono);margin:16px 0 0!important}
+.block{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;max-width:560px}
+.block i{aspect-ratio:1;border-radius:2px;background:#d8c3a5;opacity:.85;transition:background .35s,opacity .35s,transform .35s}
+.block i.z{background:var(--coral);opacity:1;transform:scale(.72)}
+.pipe{position:relative;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-width:560px;height:64px}
+.pipe span{display:grid;place-items:center;font:400 13px/1 var(--mono);color:var(--dim);border:1px solid var(--line);border-radius:3px}
+.pipe .tok{position:absolute;top:50%;left:0;width:10px;height:10px;margin-top:18px;border-radius:50%;background:var(--coral);animation:flow var(--spd,2.4s) linear infinite}
+.pipe .tok:nth-of-type(2){animation-delay:calc(var(--spd,2.4s) / -3)}
+.pipe .tok:nth-of-type(3){animation-delay:calc(var(--spd,2.4s) / -1.5)}
+.pipe.fail .tok{background:var(--coral)}
+.pipe.fail span:nth-child(2){border-color:var(--coral);color:var(--coral)}
+@keyframes flow{from{left:0}to{left:calc(100% - 10px)}}
+.wv{width:100%;max-width:640px;height:auto;display:block}
+.wv text{font:400 12px var(--mono);fill:var(--dim)}
+.wv .tr{fill:none;stroke-width:1.6}
+.wv .clk{stroke:var(--dim)}
+.wv .dv{stroke:#d8c3a5}
+.wv .en{stroke:var(--coral);transition:d .4s}
+.wv .bad .en{stroke:var(--coral)}
+.wv .grid line{stroke:var(--line);stroke-dasharray:2 4}
+@media (max-width:560px){.block{gap:2px}.wv text{font-size:19px}}

@@ -1,0 +1,55 @@
+/* v5: the v4 project diagrams, re-themed for the dark coral site. Loaded after nothing.css. */
+.nt-work.nt{
+  --n-bg:#000; --n-fg:#f2f2f2; --n-dim:#8a8a8a; --n-line:#262626; --n-card:#0c0c0c; --n-red:#F44849;
+  --n-dot:"Mono",ui-monospace,monospace; --n-sans:"Plex",system-ui,sans-serif; --n-mono:"Mono",ui-monospace,monospace;
+  --ink:#f2f2f2; --dim:#8a8a8a; --line:#262626; --sub:#141414; --amber:#F44849; --bad:#F44849;
+  background:transparent; color:var(--n-fg);
+}
+.nt-work.nt::before{background:radial-gradient(circle,#1c1c1c 1px,transparent 1.3px) 0 0/18px 18px;opacity:1}
+.nt-work.nt::after{display:none}
+.nt-work #mxgold,.nt-work #rv32i,.nt-work #systolic,.nt-work #pokemon{--n-red:#F44849}
+.nt-work .rc[href]{--n-red:#F44849}
+
+/* headings: plain v5 type instead of the dot-matrix font */
+.nt-work .nt-head h3{font:400 clamp(44px,7vw,104px)/.95 var(--sans);letter-spacing:-.05em;margin:0 0 22px;color:var(--n-fg)}
+.nt-work .nt-sum{color:#bdbdbd;max-width:62ch}
+.nt-work .nt-stats b,.nt-work .nt-gaps b,.nt-work .nt-ring__count b{font-family:var(--sans);font-weight:400;letter-spacing:-.04em}
+
+/* diagrams */
+.nt-work .dg .node rect{fill:#111;stroke:#333}
+.nt-work .dg .node.mine rect{fill:#2a0e0f;stroke:var(--n-red)}
+.nt-work .dg .node .t,.nt-work .dg .stage{fill:#f2f2f2}
+.nt-work .dg .stage{font-family:var(--sans);font-weight:500}
+.nt-work .dg .wire{stroke:#3a3a3a}
+.nt-work .dg .arrow{fill:#3a3a3a}
+.nt-work .nt-cards code{background:#1c1c1c;color:#f2f2f2}
+.nt-work .nt-cards em{color:#d8d8d8}
+.nt-work .seg button[aria-checked="true"]{background:var(--n-red);color:#000}
+.nt-work .block i{background:#5a5a5a}
+.nt-work .pipe span{border-color:#333}
+.nt-work .pipe .tok{background:#f2f2f2}
+
+/* links */
+.nt-work .pill{border-color:#333;color:var(--n-fg);border-radius:0;font-size:12px;padding:11px 14px}
+.nt-work .pill:hover{background:transparent;border-color:var(--n-red);color:var(--n-red)!important}
+
+/* 3D index ring and margin trace */
+.nt-work .rc{background:#0e0e0e;border-color:#2a2a2a;color:var(--n-fg)}
+.nt-work .rc__t{font-family:var(--sans);font-weight:500;letter-spacing:-.02em}
+.nt-work .trace{--n-red:#F44849}
+
+/* glass panels were tuned for the white v4 section: make them dark */
+.nt-work.nt,.nt-work #mxgold,.nt-work #rv32i,.nt-work #systolic,.nt-work #pokemon,.nt-work .rc[href]{--acc-rgb:244,72,73}
+.nt-work .nt-proj .nt-stats > div,.nt-work .nt-proj .nt-fig,.nt-work .nt-proj .nt-cards > li,.nt-work .nt-proj .nt-gaps > div:not(.hot),.nt-work .nt-pr,.nt-work .nt-proj .nt-demo,
+html.m .nt-work .nt-proj .nt-stats > div,html.m .nt-work .nt-proj .nt-fig,html.m .nt-work .nt-proj .nt-cards > li,
+html.wk .nt-work .nt-proj .nt-stats > div,html.wk .nt-work .nt-proj .nt-fig,html.wk .nt-work .nt-proj .nt-cards > li{
+  background:#0c0c0c!important;border-color:#232323!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-radius:20px}
+.nt-work .nt-proj .nt-gaps > .hot,html.wk .nt-work .nt-proj .nt-gaps > .hot{background:#1a0a0b!important;border-color:var(--n-red)!important}
+.nt-work .rc{background:#0e0e0e!important;background-image:none!important;border:1px solid #2a2a2a;border-top:3px solid var(--n-red)}
+.nt-work .rc:hover .rc__go{background:var(--n-red);color:#000}
+.nt-work .trace .via{background:#000;border-color:#333}
+.nt-work .flow li::after{background:#000;border-color:#444}
+.nt-work .seg button{background:#161616}
+.nt-work .nt-ring__pips li{background:#333}
+.nt-work .nt-ring__pips li.on,.nt-work .nt-ring__pips li.on:nth-child(n){background:var(--n-red);box-shadow:0 0 10px rgba(244,72,73,.5)}
+html.m .nt-work .nt-proj .nt-demo,html.wk .nt-work .nt-proj .nt-demo,html.m .nt-work .nt-proj .nt-gaps > div:not(.hot),html.m .nt-work .nt-pr,html.wk .nt-work .nt-pr,html.m.wk .nt-work .nt-proj .nt-fig,html.m.wk .nt-work .nt-proj .nt-demo{background:#0c0c0c!important;border-color:#232323!important;box-shadow:none!important}

@@ -4,112 +4,165 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chinmay Mahananda | Design verification and RTL</title>
-<meta name="description" content="Chinmay Mahananda, MS ECE at Northeastern University, Seattle. Design verification and RTL design: a bit-exact MX golden model, an RV32I core signed off at 333 MHz on Sky130, and an INT8 systolic CNN accelerator.">
+<meta name="description" content="Chinmay Mahananda, MS ECE at Northeastern University, Seattle. Design verification and RTL design: golden models first, then hardware that agrees bit for bit.">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://chinmaymahananda.github.io/">
 <meta property="og:title" content="Chinmay Mahananda | Design verification and RTL">
-<meta property="og:description" content="Golden models, RTL, and signoff. Every number on the page links to a repo.">
-<meta property="og:url" content="https://chinmaymahananda.github.io">
+<meta property="og:description" content="Every bit, accounted for. Golden models first, then hardware that agrees with them, bit for bit.">
+<meta property="og:url" content="https://chinmaymahananda.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://chinmaymahananda.github.io/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Chinmay Mahananda, design verification and RTL design, beside a 3D chip package">
+<meta property="og:image:alt" content="Chinmay Mahananda: Every bit, accounted for. A dark chip package with a coral rim light.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0A0F1F">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230A0F1F'/><g fill='%23FFB547'><rect x='7' y='7' width='5' height='5'/><rect x='14' y='7' width='5' height='5' opacity='.6'/><rect x='21' y='7' width='5' height='5' opacity='.3'/><rect x='7' y='14' width='5' height='5' opacity='.6'/><rect x='14' y='14' width='5' height='5'/><rect x='21' y='14' width='5' height='5' opacity='.6'/><rect x='7' y='21' width='5' height='5' opacity='.3'/><rect x='14' y='21' width='5' height='5' opacity='.6'/><rect x='21' y='21' width='5' height='5'/></g></svg>">
-<link rel="stylesheet" href="assets/fonts.css">
-<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23000'/><rect x='8' y='8' width='16' height='16' rx='2' fill='none' stroke='%23F44849' stroke-width='2'/><rect x='13' y='13' width='6' height='6' fill='%23F44849'/></svg>">
+
+<link rel="preload" href="assets/fonts/InterTight-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/JetBrainsMono-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="nothing.css">
-<link rel="stylesheet" href="ideas.css">
+<link rel="stylesheet" href="ideas-lite.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="v5-projects.css">
+<link rel="stylesheet" href="v5-hero.css">
+<link rel="stylesheet" href="honey.css">
 </head>
 <body>
-<a class="skip" href="#work">Skip to projects</a>
+<a class="skip" href="#about">Skip to content</a>
 
-<!-- scroll position drawn as a waveform: the cursor is where you are on the page -->
-<div class="wavebar" aria-hidden="true"><svg id="wave" preserveAspectRatio="none"></svg><span id="wavecursor"></span></div>
-
-<header class="nav">
-  <a class="nav__name" href="#top">Chinmay Mahananda</a>
-  <a class="avail" href="#contact"><span class="avail__dot" aria-hidden="true"></span><span class="avail__l">Open to Spring and Summer 2027 co-op · DV / RTL</span><span class="avail__s">Open to 2027 co-op</span></a>
-  <nav aria-label="Sections">
-    <a href="#about">About</a>
-    <a href="#work">Projects</a>
-    <a href="#record">Background</a>
-    <a href="#contact">Contact</a>
-    <button class="cmdk-btn" id="cmdkBtn" type="button" aria-haspopup="dialog" aria-label="Open command palette (Ctrl K)"><span aria-hidden="true">&gt;_</span><kbd>Ctrl K</kbd></button>
-    <button class="motion" id="motion" type="button" aria-pressed="true">Motion on</button>
+<header class="bar">
+  <a class="bar__name" href="#top">chinmay<span>—</span>©2026</a>
+  <a class="bar__mail" href="mailto:mahananda.c@northeastern.edu">mahananda.c@northeastern.edu</a>
+  <nav class="bar__nav" aria-label="Links">
+    <a href="assets/Chinmay_Mahananda_Resume.pdf" download>Resume</a><a href="https://linkedin.com/in/chinmaymahananda">LinkedIn</a><a href="https://github.com/chinmaymahananda">GitHub</a>
   </nav>
+  <button class="bar__motion motion" id="motion" type="button" aria-pressed="true">Motion on</button>
+  <a class="bar__cta" href="#contact">Get in touch</a>
+  <div class="wavebar" aria-hidden="true"><svg id="wave" preserveAspectRatio="none"></svg><i id="wavecursor"></i></div>
 </header>
 
 <main id="top">
-  <!-- HERO: pinned 3D scene, three text states driven by scroll -->
-  <section class="hero" aria-label="Introduction">
-    <div class="hero__stage">
-      <canvas id="die" aria-hidden="true"></canvas>
-      <div class="hero__labels" id="labels" aria-hidden="true"></div>
-      <div class="hero__text">
-        <div class="beat beat--1">
-          <h1>Chinmay<br>Mahananda</h1>
-          <p class="lede">Design verification and RTL design. MS in Electrical and Computer Engineering at Northeastern University, Seattle.</p>
-        </div>
-        <div class="beat beat--2" aria-hidden="true">
-          <p class="big">I write golden models, then make hardware agree with them, bit for bit.</p>
-        </div>
-        <div class="beat beat--3" aria-hidden="true">
-          <p class="big">Every number below comes from a repo you can open and run.</p>
-        </div>
-      </div>
-      <p class="hero__hint" id="hint">Scroll to take the chip apart</p>
-    </div>
-  </section>
 
-  <!-- PROJECTS: Nothing-style section. Every block names a real file or function in the repo. -->
-  <div class="nt" id="nt">
-  <!-- ABOUT: frosted-glass cards over a wash of the four project colours. Icons: Lucide (ISC). -->
-  <section id="about" class="nt-about" aria-label="About">
-    <h2 class="dots" data-dots>ABOUT</h2>
-    <div class="ab-grid">
-      <div class="glass ab-bio">
-        <p class="nt-bio">I'm an MS Electrical and Computer Engineering student at Northeastern University in Seattle, concentrating in Hardware and Software for Machine Intelligence and graduating in December 2027. My focus is design verification and RTL design: I write golden models, then make hardware agree with them, bit for bit. Before Northeastern, I earned a BE in Electronics and Communication Engineering from Dr. Ambedkar Institute of Technology, where I was first author on a published 6G antenna design paper. I'm looking for Spring and Summer 2027 co-op and internship roles in DV and RTL design.</p>
+<!-- 01 HERO: the chip package comes apart as you scroll (three.js), three text beats on top -->
+<section class="hero" aria-label="Introduction">
+  <div class="hero__stage">
+    <img class="hero__fallback" src="assets/img/hero.webp" alt="" width="1536" height="864">
+    <canvas id="die" aria-hidden="true"></canvas>
+    <div class="hero__labels" id="labels" aria-hidden="true"></div>
+    <div class="hero__text">
+      <div class="beat beat--1">
+        <h1 class="hx"><span>Every bit, accounted for.</span><span class="hx__dim">Before it ever reaches silicon.</span></h1>
       </div>
-      <div class="ab-skills">
-        <section class="glass ab-card" aria-labelledby="sk1">
-          <span class="ab-ico ico-board" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" pathLength="1"/><path d="M11 9h4a2 2 0 0 0 2-2V3" pathLength="1"/><circle cx="9" cy="9" r="2" pathLength="1"/><path d="M7 21v-4a2 2 0 0 1 2-2h4" pathLength="1"/><circle cx="15" cy="15" r="2" pathLength="1"/></svg></span>
-          <h3 id="sk1">HDL and verification</h3>
-          <ul class="chips"><li>Verilog</li><li>SystemVerilog</li><li>Icarus Verilog</li></ul>
-        </section>
-        <section class="glass ab-card" aria-labelledby="sk2">
-          <span class="ab-ico ico-cpu" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" pathLength="1"/><rect x="8" y="8" width="8" height="8" rx="1" pathLength="1"/><path d="M12 2v2" pathLength="1"/><path d="M17 2v2" pathLength="1"/><path d="M7 2v2" pathLength="1"/><path d="M12 20v2" pathLength="1"/><path d="M17 20v2" pathLength="1"/><path d="M7 20v2" pathLength="1"/><path d="M2 12h2" pathLength="1"/><path d="M2 17h2" pathLength="1"/><path d="M2 7h2" pathLength="1"/><path d="M20 12h2" pathLength="1"/><path d="M20 17h2" pathLength="1"/><path d="M20 7h2" pathLength="1"/></svg></span>
-          <h3 id="sk2">ASIC flow</h3>
-          <ul class="chips"><li>Yosys</li><li>OpenROAD</li><li>OpenLane</li><li>Sky130</li></ul>
-        </section>
-        <section class="glass ab-card" aria-labelledby="sk3">
-          <span class="ab-ico ico-wave" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" pathLength="1"/></svg></span>
-          <h3 id="sk3">Custom and analog</h3>
-          <ul class="chips"><li>Virtuoso</li><li>Spectre</li></ul>
-        </section>
-        <section class="glass ab-card" aria-labelledby="sk4">
-          <span class="ab-ico ico-code" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 16 4-4-4-4" pathLength="1"/><path d="m6 8-4 4 4 4" pathLength="1"/><path d="m14.5 4-5 16" pathLength="1"/></svg></span>
-          <h3 id="sk4">Programming and ML</h3>
-          <ul class="chips"><li>Python</li><li>C</li><li>PyTorch</li></ul>
-        </section>
+      <div class="beat beat--2" aria-hidden="true">
+        <p class="big">Golden models first. Then hardware that agrees with them, bit for bit.</p>
       </div>
-      <section class="glass ab-card ab-more" aria-labelledby="sk5">
-        <h3 id="sk5">Outside the lab</h3>
-        <ul class="ab-int">
-          <li><span class="ab-ico ico-cap" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" pathLength="1"/><path d="M22 10v6" pathLength="1"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" pathLength="1"/></svg></span><p><b>Teaching</b>Tutoring physics and maths for school students</p></li>
-          <li><span class="ab-ico ico-book" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v16" pathLength="1"/><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" pathLength="1"/></svg></span><p><b>Reading</b>Scientific literature, and keeping up with new work in STEM</p></li>
-          <li><span class="ab-ico ico-lang" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 8 6 6" pathLength="1"/><path d="m4 14 6-6 2-3" pathLength="1"/><path d="M2 5h12" pathLength="1"/><path d="M7 2h1" pathLength="1"/><path d="m22 22-5-10-5 10" pathLength="1"/><path d="M14 18h6" pathLength="1"/></svg></span><p><b>Languages</b>English, Kannada, Hindi, Telugu</p></li>
-        </ul>
-      </section>
+      <div class="beat beat--3" aria-hidden="true">
+        <p class="big">Every number below comes from a repo you can open and run.</p>
+      </div>
     </div>
-  </section>
+    <p class="hero__hint" id="hint">Scroll to take the chip apart</p>
+  </div>
+</section>
 
-  <section id="work" class="nt-work" aria-label="Projects">
-    <header class="nt-intro">
-      <p class="nt-tag"><span class="dotred"></span>Projects (4)</p>
-      <h2 class="dots" data-dots>TAKEN APART</h2>
-      <p class="nt-lede">Each repo, broken into the files and modules that do the work. Diagrams draw as you scroll.</p>
-    </header>
+
+<!-- TOOLS: logo marquee -->
+<section class="tools" aria-label="Tools I use">
+  <p class="tools__label">Tools of the trade</p>
+  <div class="tools__row"><ul class="tools__track"><li><img src="assets/logos/python.svg" alt="Python" loading="lazy"></li><li class="wm">Verilog</li><li><img src="assets/logos/yosys.png" alt="Yosys" loading="lazy"></li><li class="wm">SystemVerilog</li><li><img src="assets/logos/skywater.svg" alt="SkyWater SKY130" loading="lazy"></li><li class="wm">OpenROAD</li><li><img src="assets/logos/githubactions.svg" alt="GitHub Actions" loading="lazy"></li><li class="wm">OpenLane</li><li><img src="assets/logos/c.svg" alt="C" loading="lazy"></li><li class="wm">Icarus Verilog</li><li><img src="assets/logos/pytorch.svg" alt="PyTorch" loading="lazy"></li><li class="wm">Virtuoso</li><li><img src="assets/logos/git.svg" alt="Git" loading="lazy"></li></ul><ul class="tools__track" aria-hidden="true"><li><img src="assets/logos/python.svg" alt="Python" loading="lazy"></li><li class="wm">Verilog</li><li><img src="assets/logos/yosys.png" alt="Yosys" loading="lazy"></li><li class="wm">SystemVerilog</li><li><img src="assets/logos/skywater.svg" alt="SkyWater SKY130" loading="lazy"></li><li class="wm">OpenROAD</li><li><img src="assets/logos/githubactions.svg" alt="GitHub Actions" loading="lazy"></li><li class="wm">OpenLane</li><li><img src="assets/logos/c.svg" alt="C" loading="lazy"></li><li class="wm">Icarus Verilog</li><li><img src="assets/logos/pytorch.svg" alt="PyTorch" loading="lazy"></li><li class="wm">Virtuoso</li><li><img src="assets/logos/git.svg" alt="Git" loading="lazy"></li></ul></div>
+</section>
+
+<!-- 01 ABOUT -->
+<section class="hy about2" id="about">
+  <div class="hy__head"><span class="chap__no">[ 01 / 09 ]</span><span>About</span></div>
+  <div class="about2__grid">
+    <div>
+      <p class="lit" data-lit>I'm Chinmay, a hardware engineer who verifies before he trusts. I write golden models, then make RTL agree with them, bit for bit. Every number on this page comes from a repo you can open and run.</p>
+      <a class="btn" href="assets/Chinmay_Mahananda_Resume.pdf" download>Read my resume</a>
+    </div>
+    <figure class="about2__photo"><img src="assets/img/chinmay.webp" alt="Chinmay Mahananda in a grey suit, holding a laptop and notebooks" width="1024" height="861" loading="lazy"></figure>
+  </div>
+  <div class="path">
+    <p class="path__title">From Bengaluru to Seattle</p>
+    <ol class="path__line">
+      <li><span class="path__y">2020 – 2024</span><b>BE, Electronics and Communication Engineering</b><span>Dr. Ambedkar Institute of Technology, Bengaluru. First author on a published 6G antenna design paper.</span></li>
+      <li><span class="path__y">Sep – Nov 2024</span><b>Physics Faculty, part-time</b><span>Sri Chaitanya Techno School</span></li>
+      <li><span class="path__y">May – Aug 2025</span><b>STEM Content Developer, part-time</b><span>AppsNDevices</span></li>
+      <li><span class="path__y">Sep 2025 – now</span><b>MS, Electrical and Computer Engineering</b><span>Northeastern University, Seattle. Hardware and Software for Machine Intelligence. GPA 3.92.</span></li>
+      <li class="is-next"><span class="path__y">Jan 2027</span><b>Next: a design verification or RTL co-op</b><span>Graduating December 2027.</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- 02 WHAT I DO -->
+<section class="hy services" id="services">
+  <div class="hy__head"><span class="chap__no">[ 02 / 09 ]</span><span>What I do</span></div>
+  <div class="services__grid">
+    <div class="services__intro">
+      <h2 class="h2">I design, verify and sign off digital hardware.</h2>
+      <p>RTL that does what the spec says, testbenches that prove it, and a flow that carries it to GDSII. Self-checking from the first line, so a green result means something.</p>
+      <a class="btn" href="#work">See the work</a>
+      <img class="services__obj float" src="assets/img/chrome-gate.webp" alt="" width="720" height="720" loading="lazy">
+    </div>
+    <ul class="services__words" id="words">
+      <li>RTL design</li><li>Design verification</li><li>Golden models</li><li>Constrained-random</li><li>SystemVerilog</li><li>UVM <small>learning</small></li><li>RTL to GDSII</li><li>Timing signoff</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 03 HOW I WORK -->
+<section class="hy work3" id="method">
+  <div class="hy__head"><span class="chap__no">[ 03 / 09 ]</span><span>How I work</span></div>
+  <div class="work3__title"><h2 class="h1x">It's not guesswork.</h2><p class="mono-note">(My method is as simple as 1… 2… 3…)</p></div>
+  <div class="stack">
+    <article class="stack__card"><span class="stack__n">01</span><img class="float" src="assets/img/chrome-scroll.webp" alt="" width="720" height="720" loading="lazy"><div><h3>One spec</h3><p>Every design starts from the written specification. Where the spec leaves a choice open, I make it explicit in code: mxgold names every open choice as a policy, from <code>RoundingMode</code> to <code>ScaleSelection</code>.</p></div></article>
+    <article class="stack__card"><span class="stack__n">02</span><img class="float" src="assets/img/chrome-gears.webp" alt="" width="720" height="720" loading="lazy"><div><h3>Two models</h3><p>A golden model written from scratch, independent of the RTL, and then the RTL itself. The RV32I core is checked against a Python interpreter that is not a port of the hardware.</p></div></article>
+    <article class="stack__card"><span class="stack__n">03</span><img class="float" src="assets/img/chrome-check.webp" alt="" width="720" height="720" loading="lazy"><div><h3>Three checks</h3><p>Directed tests, constrained-random tests, and CI on every push. The systolic array's 206-case random suite fails on a coverage hole as well as on a mismatch.</p></div></article>
+  </div>
+</section>
+
+<!-- 04 SPEC MEETS SILICON -->
+<section class="hy meet" id="meet">
+  <div class="hy__head"><span class="chap__no">[ 04 / 09 ]</span><span>Verification</span></div>
+  <div class="meet__swap" id="swap">
+    <h2 class="meet__row" id="row1">Spec, meet silicon.</h2>
+    <h2 class="meet__row meet__row--dim" id="row2" aria-hidden="true">Silicon, meet spec.</h2>
+  </div>
+  <div class="meet__grid">
+    <img class="meet__obj float" src="assets/img/chrome-hand.webp" alt="" width="720" height="720" loading="lazy">
+    <div class="meet__text">
+      <p>A specification says what hardware should do. RTL says what it actually does. Verification is where the two are introduced, and where every disagreement is found while it is still cheap to fix.</p>
+      <p>That is the work I want to do: write the model that defines correct, then make the hardware agree with it.</p>
+      <a class="btn" href="#contact">Talk to me</a>
+    </div>
+  </div>
+</section>
+
+<!-- 05 BEFORE / AFTER -->
+<section class="ba2" id="before-after" aria-label="Before and after verification">
+  <div class="ba2__stage">
+    <canvas class="ba2__warp" id="warp" aria-hidden="true"></canvas>
+    <span class="chap__no ba2__no">[ 05 / 09 ]</span>
+    <h2 class="ba2__word ba2__word--before">Before<br>// verification</h2>
+    <h2 class="ba2__word ba2__word--after">After<br>// verification</h2>
+    <div class="ba2__cards ba2__cards--before">
+      <article class="tc" style="--r:-4deg"><header><h4>Silent mismatch.</h4><span>[01]</span></header><p>Outputs look plausible, nobody compares them bit for bit, and the bug ships.</p></article>
+      <article class="tc" style="--r:3deg"><header><h4>Waveform guesswork.</h4><span>[02]</span></header><p>Hours of scrolling traces with no reference for what the value should have been.</p></article>
+      <article class="tc" style="--r:-2deg"><header><h4>It passed once.</h4><span>[03]</span></header><p>A test that ran green on one seed, one day, on one machine.</p></article>
+    </div>
+    <div class="ba2__cards ba2__cards--after">
+      <article class="tc tc--hot" style="--r:3deg"><header><h4>Bit-exact.</h4><span>[01]</span></header><p>Every output compared against a golden model, bit for bit, never by eye.</p></article>
+      <article class="tc tc--hot" style="--r:-3deg"><header><h4>Self-checking.</h4><span>[02]</span></header><p>Testbenches fail loudly on a mismatch, and on a coverage hole too.</p></article>
+      <article class="tc tc--hot" style="--r:2deg"><header><h4>On every push.</h4><span>[03]</span></header><p>CI reruns every check on every commit, so green stays green.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 06 PROJECTS -->
+<section class="chap work nt nt-work" id="work">
+  <div class="chap__head"><span class="chap__no">[ 06 / 09 ]</span><span class="chap__name">How I build</span></div>
+  <h2 class="bighead">Four repos, taken apart.</h2>
+  <p class="sub">Each project broken into the files and modules that do the work. Diagrams draw as you scroll.</p>
+
 
     <!-- 3D project index: a ring of four cards that turns as you scroll (idea from codrops/3DCarousel) -->
     <div class="nt-ring" id="ring" aria-label="Project index">
@@ -137,7 +190,7 @@
     <article class="nt-proj" id="mxgold">
       <div class="nt-head">
         <p class="nt-meta"><span>01</span><code>mx-conformance</code><span>Python, Apache 2.0</span></p>
-        <h3 class="dots" data-dots>MXGOLD</h3>
+        <h3 class="dots">MXGOLD</h3>
         <p class="nt-sum">A bit-exact golden reference for OCP Microscaling arithmetic at the operation layer: scaled blocks, dot products and accumulators, not just single-element encode and decode.</p>
       </div>
       <dl class="nt-stats">
@@ -177,7 +230,7 @@
     <article class="nt-proj" id="rv32i">
       <div class="nt-head">
         <p class="nt-meta"><span>02</span><code>riscv-pipelined-core</code><span>Verilog, Sky130</span></p>
-        <h3 class="dots" data-dots>RV32I CORE</h3>
+        <h3 class="dots">RV32I CORE</h3>
         <p class="nt-sum">A 4-stage pipelined RV32I subset core with forwarding, load-use stalling and branch squashing, verified against a from-scratch golden model and signed off to GDSII.</p>
       </div>
       <dl class="nt-stats">
@@ -229,7 +282,7 @@
     <article class="nt-proj" id="systolic">
       <div class="nt-head">
         <p class="nt-meta"><span>03</span><code>systolic-mac-array</code><span>Verilog, SystemVerilog, Python</span></p>
-        <h3 class="dots" data-dots>INT8 SYSTOLIC</h3>
+        <h3 class="dots">INT8 SYSTOLIC</h3>
         <p class="nt-sum">An output-stationary MAC array built up from one processing element, extended into a weight-stationary INT8 CNN accelerator: Conv1, Conv2 and FC chained through requantization.</p>
       </div>
       <dl class="nt-stats">
@@ -284,8 +337,8 @@
     <article class="nt-proj nt-proj--small" id="pokemon">
       <div class="nt-head">
         <p class="nt-meta"><span>04</span><code>pokemon-card-scanner</code><span>Team project, fork</span></p>
-        <h3 class="dots" data-dots>CARD SCANNER</h3>
-        <p class="nt-sum">A team project for EECE 7370, Advanced Computer Vision. My part was integrating the trained model into the app interface, marked in violet below.</p>
+        <h3 class="dots">CARD SCANNER</h3>
+        <p class="nt-sum">A team project for EECE 7370, Advanced Computer Vision. My part was integrating the trained model into the app interface, highlighted in the diagram.</p>
       </div>
       <figure class="nt-fig" data-diagram="poke">
         <figcaption><span class="dotred"></span>Two-stage pipeline</figcaption>
@@ -294,55 +347,100 @@
       <p class="nt-note">Team results from the repo: about 95.5% top-1 on 22 test photos across 558 cards, about 200 ms per inference.</p>
       <a class="pill" href="https://github.com/chinmaymahananda/pokemon-card-scanner">Open pokemon-card-scanner on GitHub</a>
     </article>
-  </section>
+  
+</section>
 
-  <!-- BACKGROUND -->
-  <section id="record" class="nt-record" aria-label="Background">
-    <h2 class="dots" data-dots>BACKGROUND</h2>
-    <div class="nt-grid">
-      <div class="nt-cell nt-cell--wide">
-        <h3>Education</h3>
-        <p><strong>Northeastern University, Seattle</strong><br>MS, Electrical and Computer Engineering<br>Hardware and Software for Machine Intelligence<br>Sep 2025 to Dec 2027</p>
-        <p class="nt-gpa"><b class="dg-num">3.92</b><span>GPA</span></p>
-        <p><strong>Dr. Ambedkar Institute of Technology</strong><br>BE, Electronics and Communication Engineering, 2020 to 2024</p>
-      </div>
-      <div class="nt-cell">
-        <h3>Credentials</h3>
-        <p>Northeastern Seattle Campus Scholarship and International Impact Award</p>
-        <p>Emertxe Certified Embedded Professional (ECEP), credential 24032F_023. <a href="https://certificate.emertxe.com/?id=24032F_023">Verify</a></p>
-        <p>First author, <em>Design of 6G Antenna</em>, IJNRD, 2024. <a href="https://www.ijnrd.org/papers/IJNRD2406113.pdf">Read</a></p>
-      </div>
-      <div class="nt-cell">
-        <h3>Experience</h3>
-        <p><strong>STEM Content Developer</strong>, AppsNDevices<br>Part-time, May to Aug 2025</p>
-        <p><strong>Physics Faculty</strong>, Sri Chaitanya Techno School<br>Part-time, Sep to Nov 2024</p>
-      </div>
-      <div class="nt-cell">
-        <h3>Tools</h3>
-        <ul class="chips"><li>Verilog</li><li>SystemVerilog</li><li>Python</li><li>C</li><li>Yosys</li><li>OpenROAD</li><li>OpenLane</li><li>Sky130</li><li>Virtuoso</li><li>Spectre</li><li>Icarus</li><li>PyTorch</li></ul>
+
+<!-- 05 RULES -->
+<section class="chap rules" id="rules">
+  <div class="marquee" aria-hidden="true"><div class="marquee__track"><span>My rules</span><i></i><span>My rules</span><i></i><span>My rules</span><i></i><span>My rules</span><i></i><span>My rules</span><i></i><span>My rules</span><i></i></div></div>
+  <div class="rules__intro">
+    <span class="chap__no">[ 07 / 09 ]</span>
+    <p>Mine, alternating with the people who said it first and better. Each of mine points to the repo that keeps me honest.</p>
+    <figure class="rules__painting"><img src="assets/img/painting.webp" alt="" width="900" height="1200" loading="lazy"></figure>
+  </div>
+  <div class="rules__panel">
+    <ol class="rules__list" id="rulesList">
+      <li data-card="mx"><span class="no">001</span><span class="t">Bit-exact or it didn't happen<b>.</b></span></li>
+      <li data-card="dijkstra"><span class="no">002</span><span class="t">Program testing can be used to show the presence of bugs, but never to show their absence<b>!</b></span></li>
+      <li data-card="rv"><span class="no">003</span><span class="t">Verify before you state<b>.</b></span></li>
+      <li data-card="feynman"><span class="no">004</span><span class="t">The first principle is that you must not fool yourself, and you are the easiest person to fool<b>.</b></span></li>
+      <li data-card="gh"><span class="no">005</span><span class="t">Every claim has a repo<b>.</b></span></li>
+      <li data-card="fork"><span class="no">006</span><span class="t">Credit the team. Say what I built<b>.</b></span></li>
+      <li data-card="newton"><span class="no">007</span><span class="t">If I have seen further it is by standing on the shoulders of giants<b>.</b></span></li>
+      <li data-card="me"><span class="no">008</span><span class="t">One standard, every detail<b>.</b></span></li>
+    </ol>
+    <div class="card" id="ruleCard" aria-live="polite">
+      <div class="card__img" id="cardImg"></div>
+      <p class="card__cap" id="cardCap"></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- 08 THE BUG -->
+<section class="story" id="story">
+  <div class="story__bg" aria-hidden="true"><canvas id="storyWave"></canvas><img src="assets/img/chrome-lens.webp" alt="" width="720" height="720" loading="lazy"></div>
+  <div class="story__inner">
+    <div class="hy__head"><span class="chap__no">[ 08 / 09 ]</span><span>The bug hunt</span></div>
+    <h2 class="h1x story__title">The bug the waveforms caught.</h2>
+    <div class="story__text">
+      <p data-lit>My INT8 accelerator chains Conv1, Conv2 and a fully connected layer, each checked bit-exact against a Python golden model.</p>
+      <p data-lit>When Conv1 first ran in RTL, 124 of its 144 outputs disagreed with the golden model.</p>
+      <p data-lit>The arithmetic was right. The timing was not. The ROM reads and the controller's address outputs were both registered, so the MAC enable had to lag the tap index by two cycles. I had given it one.</p>
+      <p data-lit>I found it by diffing waveforms against per-tap golden accumulator values, one tap at a time.</p>
+      <p data-lit>One more delay stage, and Conv1 matched. Then Conv2. Then the whole chain: 20 of 20 samples bit-exact from raw image to final logits, matching the FP32 baseline accuracy of 90%.</p>
+      <p class="story__end" data-lit>The recipe never changes: a golden model, a waveform, and the patience to read both.</p>
+    </div>
+    <a class="btn" href="https://github.com/chinmaymahananda/systolic-mac-array">Read it in the repo</a>
+  </div>
+</section>
+
+<!-- 09 FAQ -->
+<section class="faq" id="faq">
+  <div class="faq__inner">
+    <div class="chap__head chap__head--ink"><span class="chap__no">[ 09 / 09 ]</span><span class="chap__name">FAQ</span></div>
+    <div class="faq__grid">
+      <h2 class="faq__title">You've got questions.<br>I've got answers.</h2>
+      <div class="faq__qs">
+        <div class="q"><span class="q__no">001</span><h3>When can you start?</h3><p>Early January 2027, for a Spring 2027 co-op. Summer 2027 internships too.</p></div>
+        <div class="q"><span class="q__no">002</span><h3>How long can you stay?</h3><p>Four, six or eight months.</p></div>
+        <div class="q"><span class="q__no">003</span><h3>Where are you?</h3><p>Seattle, and open to relocating anywhere in the US.</p></div>
+        <div class="q"><span class="q__no">004</span><h3>When do you graduate?</h3><p>December 2027, MS in Electrical and Computer Engineering.</p></div>
+        <div class="q"><span class="q__no">005</span><h3>What are you learning now?</h3><p>UVM, working toward a UVM testbench for an asynchronous FIFO.</p></div>
+        <div class="q"><span class="q__no">006</span><h3>Can I see the code?</h3><p>Every project here is a public repo, with CI you can rerun yourself.</p></div>
       </div>
     </div>
-  </section>
-
-  <section id="contact" class="nt-contact" aria-label="Contact">
-    <h2 class="dots" data-dots>SAY HELLO</h2>
-    <p class="nt-ask">Looking for Spring and Summer 2027 co-op and internship roles in design verification and RTL design. Graduating December 2027.</p>
-    <ul class="pills">
-      <li><a class="pill pill--solid" href="mailto:mahananda.c@northeastern.edu">mahananda.c@northeastern.edu</a></li>
-      <li><a class="pill" href="https://linkedin.com/in/chinmaymahananda">LinkedIn</a></li>
-      <li><a class="pill" href="https://github.com/chinmaymahananda">GitHub</a></li>
-      <li><a class="pill" href="assets/Chinmay_Mahananda_Resume.pdf">Resume (PDF)</a></li>
-    </ul>
-  </section>
   </div>
+</section>
+
+<!-- CLOSING -->
+<section class="sign" id="contact">
+  <img class="sign__obj float" src="assets/img/chrome-iron.webp" alt="" width="720" height="720" loading="lazy">
+  <div class="sign__rows" aria-hidden="true">
+    <div class="sign__row"><span>Shall we talk?</span><a tabindex="-1" href="mailto:mahananda.c@northeastern.edu">Here</a><span>Shall we talk?</span><a tabindex="-1" href="mailto:mahananda.c@northeastern.edu">Here</a></div>
+    <div class="sign__row sign__row--rev"><span>Shall we talk?</span><a tabindex="-1" href="mailto:mahananda.c@northeastern.edu">Here</a><span>Shall we talk?</span><a tabindex="-1" href="mailto:mahananda.c@northeastern.edu">Here</a></div>
+  </div>
+  <h2 class="sr">Shall we talk?</h2>
+  <a class="sign__mail" href="mailto:mahananda.c@northeastern.edu">mahananda.c@northeastern.edu</a>
+  <ul class="contact__links">
+    <li><a href="https://linkedin.com/in/chinmaymahananda">LinkedIn</a></li>
+    <li><a href="https://github.com/chinmaymahananda">GitHub</a></li>
+    <li><a href="assets/Chinmay_Mahananda_Resume.pdf" download>Resume (PDF)</a></li>
+  </ul>
+  <footer class="foot">
+    <p>© 2026 Chinmay Mahananda · Seattle</p>
+    <p class="foot__credits">Chrome objects, the painting and the hero fallback image are AI-generated art, not photographs of my hardware. The 3D chip is a model built in three.js. Tool logos belong to their owners and show software I use. Portraits: Isaac Newton by Godfrey Kneller, 1689, public domain. Richard Feynman, 1939 MIT yearbook, public domain. Edsger W. Dijkstra by Hamilton Richards, CC BY-SA 3.0, via Wikimedia Commons.</p>
+  </footer>
+</section>
+
 </main>
-
-<footer class="foot nt-foot"><p>© 2026 Chinmay Mahananda</p><p class="nt-glyph" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></p></footer>
-
-<script src="assets/vendor/three.min.js"></script>
-<script src="assets/vendor/lenis.min.js"></script>
-<script src="script.js"></script>
-<script src="nothing.js"></script>
-<script src="ideas.js"></script>
+<script src="assets/vendor/three.min.js" defer></script>
+<script src="assets/vendor/lenis.min.js" defer></script>
+<script src="chip.js" defer></script>
+<script src="nothing.js" defer></script>
+<script src="ideas-lite.js" defer></script>
+<script src="main.js" defer></script>
+<script src="honey.js" defer></script>
 </body>
 </html>

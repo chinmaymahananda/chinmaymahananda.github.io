@@ -1,0 +1,21 @@
+/* 4. real waveform viewer */
+.wf { overflow: hidden; }
+.wf__svg { display: block; width: 100%; touch-action: pan-y; cursor: ew-resize; user-select: none; }
+.wf__n { font: 12px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; fill: #5C616B; }
+.wf__v { font: 11px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace; fill: #23262D; pointer-events: none; }
+.wf__bit { fill: none; stroke: #23262D; stroke-width: 1.4; }
+.wf__bus { fill: rgba(var(--acc-rgb, 35,38,45), .08); stroke: var(--n-red); stroke-width: 1.2; }
+.wf__bus.z { fill: none; stroke: rgba(35,38,45,.3); }
+.wf__grid { stroke: rgba(35,38,45,.07); }
+.wf__cur { stroke: #D71921; stroke-width: 1.5; }
+.wf__ctl { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.wf__ctl input { flex: 1 1 220px; accent-color: var(--n-red); }
+.wf__t { font: 12px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: #5C616B; }
+.wf__t b { color: #23262D; font-weight: 500; }
+.wf__note { font-size: 14px; line-height: 1.55; color: #5C616B; margin: 10px 0 0; }
+
+/* 2b. CI badge in project headers (shields.io workflow badge) */
+.nt-meta .ci { display: inline-flex; align-items: center; margin-left: 4px; line-height: 0; border-radius: 4px; }
+.nt-meta .ci img { height: 20px; width: auto; max-width: 100%; display: block; }
+.nt-meta .ci:focus-visible { outline: 2px solid var(--n-red); outline-offset: 2px; }
+

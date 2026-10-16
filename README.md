@@ -1,31 +1,19 @@
 # Chinmay Mahananda — Portfolio
 
-Personal portfolio site for Chinmay Mahananda — Silicon & ML Systems Engineer, MS ECE at Northeastern University. Built to showcase work in VLSI design, systolic-array hardware accelerators, and machine learning systems.
+Personal portfolio of Chinmay Mahananda, MS Electrical and Computer Engineering at Northeastern University, Seattle. Design verification and RTL design.
 
 **Live:** [https://chinmaymahananda.github.io](https://chinmaymahananda.github.io)
 
----
+## What's on the site
 
-## Key features
+- A three.js chip package that comes apart as you scroll: lid, wire bonds, the Sky130 metal stack, then the systolic MAC array.
+- The four projects taken apart file by file, with diagrams that draw on scroll and live demos: [mx-conformance](https://github.com/chinmaymahananda/mx-conformance), [riscv-pipelined-core](https://github.com/chinmaymahananda/riscv-pipelined-core), [systolic-mac-array](https://github.com/chinmaymahananda/systolic-mac-array) and the team project [pokemon-card-scanner](https://github.com/chinmaymahananda/pokemon-card-scanner).
+- Every number on the page comes from one of those repos.
 
-- **Interactive systolic-array skill matrix** — a 4x4 processing-element grid representing technical competencies; hovering a node propagates a data-bus wave to its row/column and surfaces detail on that skill.
-- **Interactive hardware simulators** — an 8-bit ALU stepper (`ADD`/`SUB`/`AND`/`OR`/`XOR` with flag outputs), an INT8 MAC accumulator stepper, and a guided PCB bring-up/debug walkthrough.
-- **Terminal-style verification panel** — a simulated CLI that runs through RTL/Verilog compilation and testbench output, styled after a hardware bring-up log.
-- **Animated background canvas** — an HTML5 Canvas layer drawing PCB-style orthogonal trace routing between floating points.
+## Built with
 
-## Tech stack
+Plain HTML, CSS and JavaScript, no build step. [three.js](https://threejs.org) for the chip, [Lenis](https://github.com/darkroomengineering/lenis) for smooth scrolling. Fonts: Inter Tight and JetBrains Mono (SIL Open Font License). Hosted on GitHub Pages.
 
-- **Core:** semantic HTML5, vanilla JavaScript (ES6+), HTML5 Canvas API — no framework, no build step.
-- **Styling:** vanilla CSS3 with HSL design tokens, glassmorphism panels, responsive grid layouts, and custom keyframe animations. All interactive animations use `transform`/`opacity` rather than layout-affecting properties, for smooth, GPU-composited motion.
-- **Design language:** minimalist, Porsche-inspired visual identity — clean surfaces, restrained color, precision typography.
-- **SEO:** meta descriptors, Open Graph tags, responsive viewport configuration.
+## Credits
 
-## Structure
-
-```
-├── index.html    # markup + content
-├── styles.css    # design tokens, layout, animations
-└── script.js     # interactivity: cursor tracking, simulators, terminal, matrix hover
-```
-
-No build tooling or dependencies — it's a static site, deployed directly via GitHub Pages from `main`.
+Chrome objects, the painting and the hero fallback image are AI-generated art, not photographs of hardware. Tool logos belong to their owners. Portraits: Isaac Newton by Godfrey Kneller (public domain), Richard Feynman, 1939 MIT yearbook (public domain), Edsger W. Dijkstra by Hamilton Richards (CC BY-SA 3.0, Wikimedia Commons).
