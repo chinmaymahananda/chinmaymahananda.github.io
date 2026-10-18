@@ -475,7 +475,7 @@
   /* ---------- 10. 3D project ring: four cards on a ring that turns as you scroll ---------- */
   const ring = document.getElementById('ring'), ringEl = document.getElementById('ringEl');
   if (ring && ringEl) {
-    if (reduce) ring.classList.add('ring-static');
+    if (reduce || matchMedia('(pointer: coarse)').matches) ring.classList.add('ring-static');   // phones: a plain card grid, no long pinned scroll
     else {
       const cards = $$('.rc', ringEl), pips = $$('.nt-ring__pips li', ring), num = document.getElementById('ringNum');
       let lastA = -1, lastIdx = -1, R = 0;

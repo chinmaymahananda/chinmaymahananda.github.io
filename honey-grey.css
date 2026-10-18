@@ -59,4 +59,4 @@ html.wk .nt-work .nt-proj .nt-stats > div,html.wk .nt-work .nt-proj .nt-fig,html
 
 /* chrome objects now carry real transparency, so no blend trick is needed (it failed inside sticky panels) */
 .float,.stack__card img,.story__bg img{mix-blend-mode:normal}
-.float{filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+

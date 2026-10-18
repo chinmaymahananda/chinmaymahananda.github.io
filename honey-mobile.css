@@ -1,0 +1,58 @@
+/* v6.2: phone fixes (found on a real Galaxy S25 Ultra) */
+
+/* 1. no blue tap flash on buttons and links; keyboard focus still gets a clear coral ring */
+*{-webkit-tap-highlight-color:transparent}
+a,button{touch-action:manipulation}
+:focus:not(:focus-visible){outline:none}
+:focus-visible{outline:2px solid var(--coral);outline-offset:3px}
+
+/* 2. leftover dark-on-dark text from the old light theme */
+.nt-work .nt-demo figcaption strong,.nt-work .nt-cards em,.nt-work .nt-cell strong,.wf__t b{color:#f2f2f2!important}
+.nt-work .flow li.on::after{background:var(--coral);border-color:var(--coral);box-shadow:0 0 12px rgba(244,72,73,.6)}
+
+/* 3. phones: shorter pinned sections and steady stage heights.
+      A native flick travelled through thousands of pixels of pinned scroll (chip, project ring, warp) in a blink, so the view seemed to jump.
+      The project ring becomes a plain card grid on touch (nothing.js), the chip and the warp get shorter runways,
+      and sticky stages use lvh so they never resize while the address bar slides. */
+@media (pointer:coarse){
+  .hero{height:min(520svh,5200px)}
+  .hero__stage{height:100lvh}
+  .ba2{height:230svh}
+  .ba2__stage{height:100lvh}
+  .story__bg{height:100lvh;margin-bottom:-100lvh}
+  .nt-ring__stage{height:auto}
+  html{overflow-anchor:none}
+}
+
+/* 4. rules on a phone: the card slips behind the words as a faint picture, so it never blocks reading */
+@media (max-width:900px){
+  .rules__list{position:relative;z-index:1}
+  .rules__panel{overflow:hidden}   /* the tilted card's corner poked 2px past the screen edge */
+  .card{z-index:0;width:min(62vw,280px)}
+  .card.is-on{opacity:.3}
+  .card__img{box-shadow:none;border-color:#3a3a3a}
+  .card__cap{display:none}
+  .card__term{font-size:11px;padding:14px}
+}
+
+/* 5. closing quote and a short footer */
+.quote{max-width:1100px;margin:0 auto clamp(70px,10vw,130px);padding:0 var(--pad);text-align:center}
+.quote blockquote{font:300 clamp(28px,4vw,56px)/1.14 var(--sans);letter-spacing:-.04em;color:#f2f2f2}
+.quote blockquote::before{content:"“";color:var(--coral)}
+.quote blockquote::after{content:"”";color:var(--coral)}
+.quote figcaption{margin-top:22px;font:400 11px/1.6 var(--mono);text-transform:uppercase;color:var(--mute)}
+.foot__credits{text-align:right}
+.foot details summary{cursor:pointer;list-style:none;color:#8a8a8a}
+.foot details summary::-webkit-details-marker{display:none}
+.foot details summary:hover{color:var(--ink)}
+.foot details p{margin-top:10px;max-width:70ch;margin-left:auto}
+@media (max-width:900px){.foot__credits{text-align:left}.foot details p{margin-left:0}}
+
+/* 6. project ring cards: the one-line description was still the old light-theme dark grey */
+.nt-work .rc__d{color:#a8a8a8}
+
+.nt-work .nt-cards p,.nt-work .nt-gaps p,.nt-work .nt-cell p{color:#b0b0b0}
+
+
+
+
