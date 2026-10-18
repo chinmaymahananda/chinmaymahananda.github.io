@@ -1,0 +1,62 @@
+/* v6.1: grey tone after the chip. The hero and the warp stay black for drama; everything else sits on charcoal greys. */
+:root{--black:#171717;--panel:#212121;--line:#303030;--dim:#5f5f5f;--mute:#9c9c9c;--g1:#171717;--g2:#1e1e1e;--g3:#262626}
+html,body{background:var(--g1)}
+.bar{background:rgba(23,23,23,.82);border-bottom-color:#ffffff12}
+#wave path{stroke:#3a3a3a}
+
+/* the chip section now fades into the grey page instead of into black */
+.hero__stage::after{background:linear-gradient(to top,var(--g1) 0%,rgba(23,23,23,.92) 30%,rgba(23,23,23,.55) 62%,rgba(23,23,23,0) 100%)}
+.hero{box-shadow:0 1px 0 var(--g1)}
+
+/* alternate bands so long sections read as separate rooms */
+.tools{background:var(--g2);border-bottom-color:var(--line)}
+.services,.meet{position:relative}
+.services::before,.meet::before{content:"";position:absolute;inset:0 calc(50% - 50vw);background:var(--g2);z-index:-1}
+.tools__track img{opacity:.7}
+.tools__track .wm{color:#a2a2a2}
+
+/* text that waits to light up needs more contrast on grey */
+[data-lit] .wd{color:#4c4c4c}
+.services__words li{color:#3a3a3a}
+.meet__row--dim{color:#474747}
+.services__intro p,.stack__card p,.meet__text p,.path__line li{color:#b6b6b6}
+.hy__head,.chap__head{border-top-color:var(--line)}
+
+/* cards and panels: lifted greys with soft depth */
+.stack__card{background:var(--g3);border-color:#343434;box-shadow:0 30px 60px -30px #0009}
+.about2__photo{box-shadow:0 30px 60px -30px #000a}
+.tc{background:rgba(32,32,32,.88);border-color:#3a3a3a}
+.tc--hot{border-color:#6a2a2b}
+.rules__panel{background:var(--g3)}
+.rules__list li{color:#555}
+.marquee__track{color:#6a6a6a}
+.marquee{border-color:var(--line)}
+.btn{border-color:#474747}
+
+/* projects block (v4 diagrams) on grey */
+.nt-work.nt{--n-card:#202020;--n-line:#333;--line:#333;--sub:#262626}
+.nt-work.nt::before{background:radial-gradient(circle,#2a2a2a 1px,transparent 1.3px) 0 0/18px 18px}
+.nt-work .nt-proj .nt-stats > div,.nt-work .nt-proj .nt-fig,.nt-work .nt-proj .nt-cards > li,.nt-work .nt-proj .nt-gaps > div:not(.hot),.nt-work .nt-pr,.nt-work .nt-proj .nt-demo,
+html.m .nt-work .nt-proj .nt-stats > div,html.m .nt-work .nt-proj .nt-fig,html.m .nt-work .nt-proj .nt-cards > li,html.m .nt-work .nt-proj .nt-demo,html.m .nt-work .nt-pr,
+html.wk .nt-work .nt-proj .nt-stats > div,html.wk .nt-work .nt-proj .nt-fig,html.wk .nt-work .nt-proj .nt-cards > li,html.wk .nt-work .nt-proj .nt-demo,html.wk .nt-work .nt-pr{
+  background:#202020!important;border-color:#333!important;box-shadow:0 24px 50px -30px #0008!important}
+.nt-work .nt-proj .nt-gaps > .hot,html.wk .nt-work .nt-proj .nt-gaps > .hot{background:#2a1617!important}
+.nt-work .rc{background:#222!important;border-color:#383838}
+.nt-work .dg .node rect{fill:#2a2a2a;stroke:#444}
+.nt-work .dg .node.mine rect{fill:#3a1c1d}
+.nt-work .dg .wire{stroke:#555}
+.nt-work .dg .arrow{fill:#555}
+.nt-work .nt-cards code{background:#2e2e2e}
+.nt-work .trace .via,.nt-work .flow li::after{background:var(--g1)}
+.nt-work .seg button{background:#262626}
+.nt-work .nt-ring__pips li{background:#444}
+
+/* story and closing */
+.story__bg img{opacity:.45}
+.sign__row--rev{color:#3d3d3d}
+.foot{color:#7a7a7a;border-top-color:var(--line)}
+.contact__links a{border-color:#3a3a3a}
+
+/* chrome objects now carry real transparency, so no blend trick is needed (it failed inside sticky panels) */
+.float,.stack__card img,.story__bg img{mix-blend-mode:normal}
+.float{filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
