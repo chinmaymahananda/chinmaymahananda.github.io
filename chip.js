@@ -110,8 +110,11 @@
   addEventListener('scroll', markScroll, { passive: true }); addEventListener('touchmove', markScroll, { passive: true });
   const finePointer = matchMedia('(pointer: fine)').matches;
   let lenis = null;
-  if (!reduce && window.Lenis && finePointer) {   // smooth wheel for mouse/trackpad only; touch keeps native momentum
-    lenis = new Lenis({ lerp: 0.085, smoothWheel: true }); window.__lenis = lenis;
+  const phone = document.documentElement.classList.contains('phone');
+  if (!reduce && window.Lenis && (finePointer || phone)) {   // desktop: smooth wheel. Phones: damped touch, so one flick no longer flies past a whole section. Tablets keep native touch.
+    lenis = new Lenis(phone
+      ? { lerp: 0.085, smoothWheel: true, syncTouch: true, syncTouchLerp: 0.07, touchInertiaMultiplier: 16, touchMultiplier: 0.85 }
+      : { lerp: 0.085, smoothWheel: true }); window.__lenis = lenis;
     $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
       const t = a.getAttribute('href'); if (t.length < 2) return;
       e.preventDefault(); lenis.scrollTo(t === '#top' ? 0 : t, { offset: -70 });

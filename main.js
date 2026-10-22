@@ -105,7 +105,7 @@
       if (i >= 0) {
         const r = items[i].getBoundingClientRect(), cw = card.offsetWidth, ch = card.offsetHeight;
         if (ptr) { tx = clamp(ptr.x + 24, 0, pr.width - cw - 8); ty = r.top - pr.top - ch - 6; }   // above the lit line, so the line stays readable
-        else { tx = innerWidth < 900 ? pr.width - cw - 8 : Math.min(pr.width * 0.64, pr.width - cw - 220); ty = r.top - pr.top + r.height / 2 - ch * (innerWidth < 900 ? 0.5 : 0.55); }
+        else { tx = document.documentElement.classList.contains('phone') ? pr.width - cw - 8 : Math.min(pr.width * 0.64, pr.width - cw - 220); ty = r.top - pr.top + r.height / 2 - ch * (document.documentElement.classList.contains('phone') ? 0.5 : 0.55); }
         if (!placed || reduce) { cx = tx; cy = ty; placed = true; }
         else { const k = 1 - Math.exp(-dt / 70); cx = lerp(cx, tx, k); cy = lerp(cy, ty, k); }   // frame-rate independent follow
         card.style.transform = `translate3d(${cx.toFixed(1)}px, ${cy.toFixed(1)}px, 0)`;

@@ -10,29 +10,23 @@ a,button{touch-action:manipulation}
 .nt-work .nt-demo figcaption strong,.nt-work .nt-cards em,.nt-work .nt-cell strong,.wf__t b{color:#f2f2f2!important}
 .nt-work .flow li.on::after{background:var(--coral);border-color:var(--coral);box-shadow:0 0 12px rgba(244,72,73,.6)}
 
-/* 3. phones: shorter pinned sections and steady stage heights.
-      A native flick travelled through thousands of pixels of pinned scroll (chip, project ring, warp) in a blink, so the view seemed to jump.
-      The project ring becomes a plain card grid on touch (nothing.js), the chip and the warp get shorter runways,
-      and sticky stages use lvh so they never resize while the address bar slides. */
-@media (pointer:coarse){
-  .hero{height:min(520svh,5200px)}
-  .hero__stage{height:100lvh}
-  .ba2{height:230svh}
-  .ba2__stage{height:100lvh}
-  .story__bg{height:100lvh;margin-bottom:-100lvh}
-  .nt-ring__stage{height:auto}
-  html{overflow-anchor:none}
-}
+/* 3. phones (html.phone): damped touch scrolling lives in chip.js. Pinned sections keep their full length,
+      sticky stages use lvh so they never resize while the address bar slides, and the project ring is a card grid. */
+html.phone .hero__stage{height:100lvh}
+html.phone .ba2__stage{height:100lvh}
+html.phone .story__bg{height:100lvh;margin-bottom:-100lvh}
+html.phone .nt-ring__stage{height:auto}
+html.phone{overflow-anchor:none}
 
 /* 4. rules on a phone: the card slips behind the words as a faint picture, so it never blocks reading */
 @media (max-width:900px){
-  .rules__list{position:relative;z-index:1}
-  .rules__panel{overflow:hidden}   /* the tilted card's corner poked 2px past the screen edge */
-  .card{z-index:0;width:min(62vw,280px)}
-  .card.is-on{opacity:.3}
-  .card__img{box-shadow:none;border-color:#3a3a3a}
-  .card__cap{display:none}
-  .card__term{font-size:11px;padding:14px}
+  html.phone .rules__list{position:relative;z-index:1}
+  html.phone .rules__panel{overflow:hidden}   /* the tilted card's corner poked 2px past the screen edge */
+  html.phone .card{z-index:0;width:min(62vw,280px)}
+  html.phone .card.is-on{opacity:.3}
+  html.phone .card__img{box-shadow:none;border-color:#3a3a3a}
+  html.phone .card__cap{display:none}
+  html.phone .card__term{font-size:11px;padding:14px}
 }
 
 /* 5. closing quote and a short footer */
